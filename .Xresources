@@ -1,0 +1,106 @@
+! xrdb -merge ~/.Xresources (TO APPLY CHANGES)
+
+! Color-scheme : Isotope Dark
+! Author       : Author Chris Kempson
+! special
+*.foreground:   #d0d0d0
+*.background:   #000000
+*.cursorColor:  #d0d0d0
+
+! black
+*.color0:       #000000
+*.color8:       #808080
+
+! red
+*.color1:       #ff0000
+*.color9:       #ff0000
+
+! green
+*.color2:       #33ff00
+*.color10:      #33ff00
+
+! yellow
+*.color3:       #ff0099
+*.color11:      #ff0099
+
+! blue
+*.color4:       #0066ff
+*.color12:      #0066ff
+
+! magenta
+*.color5:       #cc00ff
+*.color13:      #cc00ff
+
+! cyan
+*.color6:       #00ffff
+*.color14:      #00ffff
+
+! white
+*.color7:       #d0d0d0
+*.color15:      #ffffff
+
+URxvt*termName:  screen-256color
+URxvt*scrollBar: false
+
+! Font
+URxvt*font:		xft:BitstreamVeraSansMono Nerd Font Mono:size=10
+URxvt*boldffont:	xft:BitstreamVeraSansMono Bold Nerd Font Bold:bold:size=10
+URxvt*italicfont:	xft:BitstreamVeraSansMono Nerd Font Oblique:size=10
+URxvt*boldItalicfont:	xft:BitstreamVeraSansMono Nerd Font Bold Oblique:size=10
+URxvt*urlLauncher: /usr/bin/xdg-open
+URxvt*matcher.button: 1
+URxvt*letterSpace: -1
+URxvt*lineSpace: 0
+
+URxvt*cursorBlink: true
+
+URxvt*transparent: true
+URxvt*shading: 30
+
+URxvt*iso14755: false
+URxvt*iso14755_52: false
+
+URxvt*perl-lib: .urxvt/perl
+URxvt*perl-ext-common: default,matcher,font-size,tabbed
+URxvt*keysym.C-Right: \033[1;5C
+URxvt*keysym.C-Left: \033[1;5D
+URxvt*keysym.C-Up: perl:font-size:increase
+URxvt*keysym.C-k: perl:font-size:increase
+URxvt*keysym.C-Down: perl:font-size:decrease
+URxvt*keysym.C-j: perl:font-size:decrease
+URxvt*keysym.M-u: perl:url-select:select_next
+URxvt*url-select.launcher: firefox
+URxvt*url-select.underline: true
+URxvt*keysym.M-Escape: perl:keyboard-select:activate
+URxvt*keysym.Control-Alt-C: perl:clipboard:copy
+URxvt*keysym.Control-Alt-V: perl:clipboard:paste
+
+URxvt*geometry: 120x35+c+c
+URxvt*saveLines:  2000
+
+URxvt*tabbed.tabbar-fg: 2
+URxvt*tabbed.tabbar-bg: 0
+URxvt*tabbed.tab-fg: 3
+URxvt*tabbed.tab-bg: 0
+
+! █▓▒░ default dpi mode
+Xft*dpi       : 96
+Xft*autohint  : false
+Xft*hintstyle : hintfull
+Xft*lcdfilter : lcddefault
+Xft*antialias : true
+Xft*rgba      : rgb
+
+! █▓▒░ high dpi mode
+!Xft*dpi: 190
+!Xft*autohint: 0
+!Xft*lcdfilter: lcddefault
+!Xft*hintstyle: hintfull
+!Xft*hinting: 1
+!Xft*antialias: 1
+!Xft*rgba: rgb
+
+XTerm*faceName: BitstreamVeraSansMono Nerd Font Mono
+XTerm*faceSize: 10
+XTerm*vt100*geometry: 120x35+c+c
+XTerm*saveLines: 2000
