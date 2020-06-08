@@ -2,16 +2,122 @@
 " http://vim.fisadev.com
 " version: 12.0.0
 
-" To use fancy symbols wherever possible, change this setting from 0 to 1
-" and use a font from https://github.com/ryanoasis/nerd-fonts in your terminal
-" (if you aren't using one of those fonts, you will see funny characters here.
-" Turst me, they look nice when using one of those fonts).
-let fancy_symbols_enabled = 0
-
-
-set encoding=utf-8
 let using_neovim = has('nvim')
 let using_vim = !using_neovim
+if using_vim
+    " A bunch of things that are set by default in neovim, but not in vim
+
+    " no vi-compatible
+    set nocompatible
+
+    " allow plugins by file type (required for plugins!)
+    filetype plugin on
+    filetype indent on
+
+    " always show status bar
+    set ls=2
+
+    " incremental search
+    set incsearch
+    " highlighted search results
+    set hlsearch
+
+    " syntax highlight on
+    syntax enable
+
+    " better backup, swap and undos storage for vim (nvim has nice ones by
+    " default)
+    set directory=~/.vim/dirs/tmp     " directory to place swap files in
+    set backup                        " make backup files
+    set backupdir=~/.vim/dirs/backups " where to put backup files
+    set undofile                      " persistent undos - undo after you re-open the file
+    set undodir=~/.vim/dirs/undos
+    set viminfo+=n~/.vim/dirs/viminfo
+    " create needed directories if they don't exist
+    if !isdirectory(&backupdir)
+        call mkdir(&backupdir, "p")
+    endif
+    if !isdirectory(&directory)
+        call mkdir(&directory, "p")
+    endif
+    if !isdirectory(&undodir)
+        call mkdir(&undodir, "p")
+    endif
+endif
+
+" ============================================================================
+" Some basic Vim settings
+
+let mapleader="\<Space>"
+set encoding=utf-8
+let fancy_symbols_enabled = 0
+set nowrap
+set hidden
+set nobackup
+set mouse=a
+set path+=**
+set history=500
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+set colorcolumn=80
+set pastetoggle=<f2>
+set clipboard+=unnamedplus
+nnoremap <Tab> :bnext<cr>
+nnoremap <S-Tab> :bprevious<cr>
+vnoremap <Leader>s :sort<CR>
+vnoremap < <gv  " better indentation
+vnoremap > >gv  " better indentation
+set tabstop=4
+set softtabstop=4
+map tt :tabnew
+map <M-Right> :tabn<CR>
+imap <M-Right> <ESC>:tabn<CR>
+map <M-Left> :tabp<CR>
+imap <M-Left> <ESC>:tabp<CR>
+set shiftwidth=4
+set nu
+set fillchars+=vert:\
+set background = "dark"
+set termguicolors
+if has('gui_running') || using_neovim || (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256')
+    if !has('gui_running')
+        let &t_Co = 256
+    endif
+    colorscheme jellybeans
+else
+    colorscheme plastic
+endif
+hi Normal guibg=NONE ctermbg=NONE
+hi NonText guibg=NONE ctermbg=NONE
+set completeopt+=noinsert
+" comment this line to enable autocompletion preview window
+" (displays documentation related to the selected completion option)
+" disabled by default because preview makes the window flicker
+set completeopt-=preview
+" autocompletion of files and commands behaves like shell
+" (complete only the common part, list the options that match)
+set wildmode=list:longest
+" save as sudo
+ca w!! w !sudo tee "%"
+" when scrolling, keep cursor 3 lines away from screen border
+set scrolloff=3
+" clear search results
+nnoremap <silent> // :noh<CR>
+" clear empty spaces at the end of lines on save of python files
+autocmd BufWritePre *.py :%s/\s\+$//e
+" Ability to add python breakpoints
+" (I use ipdb, but you can change it to whatever tool you use for debugging)
+au FileType python map <silent> <leader>b Oimport ipdb; ipdb.set_trace()<esc>
+" fix problems with uncommon shells (fish, xonsh) and plugins running commands
+" (neomake, ...)
+set shell=/bin/bash
+
+" End of the basic Vim settings
 
 " ============================================================================
 " Vim-plug initialization
@@ -70,9 +176,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 " Search results counter
 Plug 'vim-scripts/IndexedSearch'
-" A couple of nice colorschemes
-" Plug 'fisadev/fisa-vim-colorscheme'
-Plug 'patstockwell/vim-monokai-tasty'
 " Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -134,6 +237,8 @@ Plug 'neomake/neomake'
 Plug 'myusuf3/numbers.vim'
 " Nice icons in the file explorer and file type status line.
 Plug 'ryanoasis/vim-devicons'
+Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
 " A personal wiki / note taking framework
 Plug 'vimwiki/vimwiki'
 " Firenvim add-on to Firefox
@@ -163,161 +268,6 @@ if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
     :PlugInstall
 endif
-
-" ============================================================================
-" Vim settings and mappings
-" You can edit them as you wish
-
-if using_vim
-    " A bunch of things that are set by default in neovim, but not in vim
-
-    " no vi-compatible
-    set nocompatible
-
-    " allow plugins by file type (required for plugins!)
-    filetype plugin on
-    filetype indent on
-
-    " always show status bar
-    set ls=2
-
-    " incremental search
-    set incsearch
-    " highlighted search results
-    set hlsearch
-
-    " syntax highlight on
-    syntax enable
-
-    " better backup, swap and undos storage for vim (nvim has nice ones by
-    " default)
-    set directory=~/.vim/dirs/tmp     " directory to place swap files in
-    set backup                        " make backup files
-    set backupdir=~/.vim/dirs/backups " where to put backup files
-    set undofile                      " persistent undos - undo after you re-open the file
-    set undodir=~/.vim/dirs/undos
-    set viminfo+=n~/.vim/dirs/viminfo
-    " create needed directories if they don't exist
-    if !isdirectory(&backupdir)
-        call mkdir(&backupdir, "p")
-    endif
-    if !isdirectory(&directory)
-        call mkdir(&directory, "p")
-    endif
-    if !isdirectory(&undodir)
-        call mkdir(&undodir, "p")
-    endif
-end
-
-" ============================================================================
-" Some legacy Vim Tweaks
-
-" Search into subfolders
-" Provides tab-completion for all file related tasks
-set path+=**
-
-" Sets how many lines of history VIM has to remember
-set history=500
-
-" Delete trailing white space on save, useful for some filetypes ;)
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
-
-" Draw a line on the right side
-set colorcolumn=80
-
-" Better copy and paste
-set pastetoggle=<f2>
-set clipboard+=unnamedplus
-
-" Map sort function to a key
-vnoremap <Leader>s :sort<CR>
-
-" Move blocks of code with < or > keys
-vnoremap < <gv  " better indentation
-vnoremap > >gv  " better indentation
-
-" End of the legacy Vim tweaks
-" ============================================================================
-
-" tabs and spaces handling
-"set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-
-" show line numbers
-set nu
-
-" remove ugly vertical lines on window division
-set fillchars+=vert:\
-
-" Set the background theme to dark
-set background = "dark"
-
-" enable true color support
-set termguicolors
-
-" use 256 colors when possible
-if has('gui_running') || using_neovim || (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256')
-    if !has('gui_running')
-        let &t_Co = 256
-    endif
-    colorscheme jellybeans
-else
-    colorscheme plastic
-endif
-
-" enable transparency
-hi Normal guibg=NONE ctermbg=NONE
-hi NonText guibg=NONE ctermbg=NONE
-
-" needed so deoplete can auto select the first suggestion
-set completeopt+=noinsert
-" comment this line to enable autocompletion preview window
-" (displays documentation related to the selected completion option)
-" disabled by default because preview makes the window flicker
-set completeopt-=preview
-
-" autocompletion of files and commands behaves like shell
-" (complete only the common part, list the options that match)
-set wildmode=list:longest
-
-" save as sudo
-ca w!! w !sudo tee "%"
-
-" tab navigation mappings
-map tt :tabnew
-map <M-Right> :tabn<CR>
-imap <M-Right> <ESC>:tabn<CR>
-map <M-Left> :tabp<CR>
-imap <M-Left> <ESC>:tabp<CR>
-
-" when scrolling, keep cursor 3 lines away from screen border
-set scrolloff=3
-
-" clear search results
-nnoremap <silent> // :noh<CR>
-
-" clear empty spaces at the end of lines on save of python files
-autocmd BufWritePre *.py :%s/\s\+$//e
-
-" fix problems with uncommon shells (fish, xonsh) and plugins running commands
-" (neomake, ...)
-set shell=/bin/bash
-
-" Ability to add python breakpoints
-" (I use ipdb, but you can change it to whatever tool you use for debugging)
-au FileType python map <silent> <leader>b Oimport ipdb; ipdb.set_trace()<esc>
-
-" ============================================================================
-" Plugins settings and mappings
-" Edit them as you wish.
 
 " Tagbar -----------------------------
 
@@ -371,8 +321,8 @@ autocmd! BufWritePost * Neomake
 " Check code as python3 by default
 let g:neomake_python_python_maker = neomake#makers#ft#python#python()
 let g:neomake_python_flake8_maker = neomake#makers#ft#python#flake8()
-let g:neomake_python_python_maker.exe = 'python3.7 -m py_compile'
-let g:neomake_python_flake8_maker.exe = 'python3.7 -m flake8'
+let g:neomake_python_python_maker.exe = 'python3.8 -m py_compile'
+let g:neomake_python_flake8_maker.exe = 'python3.8 -m flake8'
 
 " Disable error messages inside the buffer, next to the problematic line
 let g:neomake_virtualtext_current_error = 0
@@ -403,8 +353,8 @@ nmap ,c :Commands<CR>
 " Deoplete -----------------------------
 
 " Use deoplete.
-let g:python_host_prog = '/usr/bin/python'
-let g:python3_host_prog = '/usr/bin/python3'
+let g:python_host_prog = '/usr/bin/python3.8'
+let g:python3_host_prog = '/usr/bin/python3.8'
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
 let g:deoplete#enable_smart_case = 1
@@ -501,8 +451,21 @@ else
     let g:webdevicons_enable = 0
 endif
 
-" Set VimWiki syntax
-let g:vimwiki_list = [{'path': '~/vimwiki/','syntax': 'markdown', 'ext': '.md'}]
+" plasticboy/vim-markdown-------------
+autocmd FileType markdown let b:sleuth_automatic=0
+autocmd Filetype markdown let conceallevel=0
+autocmd FileType markdown normal zR
+let g:vim_markdown_frontmatter=1
+
+" iamcco/markdown-preview.nvim--------
+let g:mkdp_refresh_slow=1
+let g:mkdp_markdown_css='/usr/local/share/md/github-markdown.css'
+let g:mkdp_browser='firefox'
+let g:mkdp_auto_close=0
+
+" VimWiki----------------------------
+let g:vimwiki_list = [{'path': '~/Documents/Vimwiki/','syntax': 'markdown', 'ext': '.md'}]
+au BufRead,BufNewFile *.wiki set filetype=vimwiki
 
 " Custom configurations ----------------
 
@@ -515,4 +478,3 @@ endif
 if filereadable(expand(custom_configs_path))
   execute "source " . custom_configs_path
 endif
-
