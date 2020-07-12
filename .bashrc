@@ -96,6 +96,12 @@ alias la='ls -A'
 alias l='ls -CF'
 alias zenity='zenity 2>/dev/null'
 
+# clear
+alias c='clear'
+
+# set ls colors
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -122,16 +128,16 @@ fi
 
 # use python 3 in bash
 alias python="python3"
-alias pip="python3.7 -m pip"
-alias pip3="python3.7 -m pip"
+alias pip="python3.8 -m pip"
+alias pip3="python3.8 -m pip"
 
 # use nvim instead of vim
 alias vim="nvim"
 
-# use mate-terminal instead of xterm
+# use mate-terminal instead of xterm or x-terminal-emulator
 alias xterm="mate-terminal"
-
-# use mate-terminal instead of x-terminal-emulator
+alias lxterm="mate-terminal"
+alias uxterm="mate-terminal"
 alias x-terminal-emulator="mate-terminal"
 
 # use powerline go
@@ -144,6 +150,7 @@ function _update_ps1() {
         fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_OPS="--extended"
 
 # icons for lf
 export LF_ICONS="\
