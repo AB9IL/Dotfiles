@@ -100,7 +100,7 @@ Xft*rgba      : rgb
 !Xft*antialias: 1
 !Xft*rgba: rgb
 
-XTerm*faceName: BitstreamVeraSansMono Nerd Font Mono
-XTerm*faceSize: 10
-XTerm*vt100*geometry: 120x35+c+c
-XTerm*saveLines: 2000
+xterm*faceName: BitstreamVeraSansMono Nerd Font Mono
+xterm*faceSize: 10
+xterm*vt100*geometry: 120x35+c+c
+xterm*saveLines: 2000
