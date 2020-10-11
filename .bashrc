@@ -126,29 +126,47 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# syntax highlighting for cat (requires ccat binary)
+alias cat="ccat --bg=dark $*"
+alias ccat="ccat --bg=dark $*"
+
 # use python 3 in bash
 alias python="python3"
 alias pip="python3.8 -m pip"
 alias pip3="python3.8 -m pip"
 
+# tmux
+alias tmux="tmux -2"
+
 # use nvim instead of vim
 alias vim="nvim"
 
-# use mate-terminal instead of xterm or x-terminal-emulator
-alias xterm="mate-terminal"
-alias lxterm="mate-terminal"
-alias uxterm="mate-terminal"
-alias x-terminal-emulator="mate-terminal"
+# vim keys to exit
+alias :q='exit'
+
+# use x-terminal-emulator instead of xterm
+alias xterm="x-terminal-emulator"
+alias uxterm="x-terminal-emulator"
+alias lxterm="x-terminal-emulator"
+
+alias w0u="systemctl start wg-quick@wg0.service"
+alias w0d="systemctl stop wg-quick@wg0.service"
+alias w1u="systemctl start wg-quick@wg1.service"
+alias w1d="systemctl stop wg-quick@wg1.service"
+alias w2u="systemctl start wg-quick@wg2.service"
+alias w2d="systemctl stop wg-quick@wg2.service"
+alias wgxfr="cp -f wg*.conf /etc/wireguard/"
 
 # use powerline go
 function _update_ps1() {
-    PS1="$(/usr/local/bin/powerline-go -error $?)"
+    PS1="$(/usr/local/bin/powerline-go -colorize-hostname -condensed -error $?)"
     }
 
     if [ "$TERM" != "linux" ] && [ -f "/usr/local/bin/powerline-go" ]; then
         PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
         fi
 
+alias fzf='fzf --preview="ccat {}"'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPS="--extended"
 
