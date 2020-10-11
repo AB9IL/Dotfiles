@@ -4,83 +4,8 @@ let using_neovim = has('nvim')
 let using_vim = !using_neovim
 
 " ============================================================================
-" Some basic neovim settings
-
-let mapleader="\<Space>"
-set encoding=utf-8
-let fancy_symbols_enabled = 0
-set nowrap
-set hidden
-set nobackup
-set mouse=a
-set path+=**
-set history=500
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
-set colorcolumn=80
-set pastetoggle=<f2>
-set clipboard+=unnamedplus
-nnoremap <Tab> :bnext<cr>
-nnoremap <S-Tab> :bprevious<cr>
-vnoremap <Leader>s :sort<CR>
-vnoremap < <gv  " better indentation
-vnoremap > >gv  " better indentation
-set tabstop=4
-set softtabstop=4
-map tt :tabnew
-map <M-Right> :tabn<CR>
-imap <M-Right> <ESC>:tabn<CR>
-map <M-Left> :tabp<CR>
-imap <M-Left> <ESC>:tabp<CR>
-set shiftwidth=4
-set nu
-set fillchars+=vert:\
-set background = "dark"
-set termguicolors
-if has('gui_running') || using_neovim || (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256')
-    if !has('gui_running')
-        let &t_Co = 256
-    endif
-    colorscheme jellybeans
-else
-    colorscheme plastic
-endif
-hi Normal guibg=NONE ctermbg=NONE
-hi NonText guibg=NONE ctermbg=NONE
-set completeopt+=noinsert
-" comment this line to enable autocompletion preview window
-" (displays documentation related to the selected completion option)
-" disabled by default because preview makes the window flicker
-set completeopt-=preview
-" autocompletion of files and commands behaves like shell
-" (complete only the common part, list the options that match)
-set wildmode=list:longest
-" save as sudo
-ca w!! w !sudo tee "%"
-" when scrolling, keep cursor 3 lines away from screen border
-set scrolloff=3
-" clear search results
-nnoremap <silent> // :noh<CR>
-" clear empty spaces at the end of lines on save of python files
-autocmd BufWritePre *.py :%s/\s\+$//e
-" Ability to add python breakpoints
-" (I use ipdb, but you can change it to whatever tool you use for debugging)
-au FileType python map <silent> <leader>b Oimport ipdb; ipdb.set_trace()<esc>
-" fix problems with uncommon shells (fish, xonsh) and plugins running commands
-" (neomake, ...)
-set shell=/bin/bash
-
-" End of the basic Vim settings
-
+" Plugins
 " ============================================================================
-" Vim-plug initialization
-" Avoid modifying this section, unless you are very sure of what you are doing
-
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.config/nvim/autoload/plug.vim')
 if !filereadable(vim_plug_path)
@@ -97,41 +22,18 @@ if vim_plug_just_installed
     :execute 'source '.fnameescape(vim_plug_path)
 endif
 
-" Obscure hacks done, you can now modify the rest of the config down below
-" as you wish :)
-" IMPORTANT: some things in the config are vim or neovim specific. It's easy
-" to spot, they are inside `if using_vim` or `if using_neovim` blocks.
-
-" ============================================================================
-" Active plugins
-" You can disable or add new ones here:
-
-" this needs to be here, so vim-plug knows we are declaring the plugins we
-" want to use
 call plug#begin("~/.config/nvim/plugged")
-
-" Now the actual plugins:
-
-" Override configs by directory
 Plug 'arielrossanigo/dir-configs-override.vim'
-" Code commenter
 Plug 'scrooloose/nerdcommenter'
-" Better file browser
-Plug 'scrooloose/nerdtree'
-" Class/module browser
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'vim-scripts/AutoComplPop'
 Plug 'majutsushi/tagbar'
-" Search results counter
 Plug 'vim-scripts/IndexedSearch'
-" Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Code and files fuzzy finder
-" To save space, disable updating the binary and symlink to pkg manager fzf
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-" Pending tasks list
 Plug 'fisadev/FixedTaskList.vim'
-" Async autocompletion
 if using_neovim && vim_plug_just_installed
     Plug 'Shougo/deoplete.nvim', {'do': ':autocmd VimEnter * UpdateRemotePlugins'}
 else
@@ -139,120 +41,312 @@ else
 endif
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
-" Python autocompletion
 Plug 'deoplete-plugins/deoplete-jedi'
-" Golang autocompletion
 Plug 'deoplete-plugins/deoplete-go', {'do': 'make'}
-" Gocode is the golang autocompletion daemon
 Plug 'nsf/gocode', {'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh'}
-" Completion from other opened files
 Plug 'Shougo/context_filetype.vim'
-" Just to add the python go-to-definition and similar features, autocompletion
-" from this plugin is disabled
 Plug 'davidhalter/jedi-vim'
-" Automatically close parenthesis, etc
 Plug 'Townk/vim-autoclose'
-" Surround
 Plug 'tpope/vim-surround'
-" Indent text object
 Plug 'michaeljsmith/vim-indent-object'
-" Indentation based movements
 Plug 'jeetsukumaran/vim-indentwise'
-" Better language packs
 Plug 'sheerun/vim-polyglot'
-" Ack code search (requires ack installed in the system)
 Plug 'mileszs/ack.vim'
-" Paint css colors with the real color
-Plug 'lilydjwg/colorizer'
-" Window chooser'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 't9md/vim-choosewin'
-" Automatically sort python imports
 Plug 'fisadev/vim-isort'
-" Highlight matching html tags
 Plug 'valloric/MatchTagAlways'
-" Generate html in a simple way
 Plug 'mattn/emmet-vim'
-" Git integration
 Plug 'tpope/vim-fugitive'
-" Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
-" Yank history navigation
 Plug 'vim-scripts/YankRing.vim'
-" Linters
 Plug 'neomake/neomake'
-" Nice icons in the file explorer and file type status line.
 Plug 'ryanoasis/vim-devicons'
-Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown'
+Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
-" A personal wiki / note taking framework
 Plug 'vimwiki/vimwiki'
-" Firenvim add-on to Firefox
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-if exists('g:started_by_firenvim')
-  packadd firenvim
-endif
-" Code searcher. If you enable it, you should also configure g:hound_base_url
-" and g:hound_port, pointing to your hound instance
-" Plug 'mattn/webapi-vim'
-" Plug 'jfo/hound.vim'
-
-" Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
-" ============================================================================
 " Install plugins the first time vim runs
-
 if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
     :PlugInstall
 endif
 
-" Tagbar -----------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic settings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let fancy_symbols_enabled = 0
+let mapleader="\<Space>"
+set clipboard+=unnamedplus
+set colorcolumn=80
+set complete+=kspell
+set completeopt=menuone,longest
+set cursorline
+set encoding=utf-8
+set hidden
+set history=500
+set nowrap
+set nobackup
+set mouse=a
+set pastetoggle=<f2>
+set path+=**
+set ruler
+set shell=/bin/bash
+set tabstop=4
+set textwidth=120
+set softtabstop=4
+set title
+set shiftwidth=4
+set nu
+set fillchars+=vert:\
+set completeopt+=noinsert
+set completeopt-=preview
+set scrolloff=3
+set shortmess+=c
+set splitbelow
+set splitright
+set wildmode=list:longest
 
+" Set colors and transparency
+set background = "dark"
+if has('gui_running') || using_neovim || (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256')
+    if !has('gui_running')
+        let &t_Co = 256
+    endif
+    colorscheme jellybeans
+else
+    colorscheme plastic
+endif
+set termguicolors
+hi Normal guibg=NONE ctermbg=NONE
+hi NonText guibg=NONE ctermbg=NONE
+
+" Clean up trailing whitespace on save
+autocmd BufWritePre *.py :%s/\s\+$//e
+au FileType python map <silent> <leader>b Oimport ipdb; ipdb.set_trace()<esc>
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+" Open certain files as Markdown
+au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mdwn,*md set ft=markdown
+
+" Writer mode
+fun! Writer()
+	setlocal spell spelllang=en_us
+	setlocal formatoptions=t1
+	setlocal textwidth=80
+	setlocal noautoindent
+	setlocal shiftwidth=5
+	setlocal tabstop=5
+	setlocal expandtab
+endfun
+com! WR call Writer()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Seamlessly treat visual lines as actual lines when moving around.
+noremap j gj
+noremap k gk
+noremap <Down> gj
+noremap <Up> gk
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+
+" Navigate tabs
+map tt :tabnew
+map <M-Right> :tabn<CR>
+imap <M-Right> <ESC>:tabn<CR>
+map <M-Left> :tabp<CR>
+imap <M-Left> <ESC>:tabp<CR>
+
+" Navigate around splits with a single key combo.
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-h> <C-w><C-h>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-j> <C-w><C-j>
+
+" Cycle through splits.
+nnoremap <S-Tab> <C-w>w
+
+" Cycle through buffers.
+nnoremap <Tab> :bnext<cr>
+nnoremap <S-Tab> :bprevious<cr>
+
+" Press * to search for the term under the cursor or a visual selection and
+" then press a key below to replace all instances of it in the current file.
+nnoremap <Leader>r :%s///g<Left><Left>
+nnoremap <Leader>rc :%s///gc<Left><Left><Left>
+
+" The same as above but instead of acting on the whole file it will be
+" restricted to the previously visually selected range. You can do that by
+" pressing *, visually selecting the range you want it to apply to and then
+" press a key below to replace all instances of it in the current selection.
+xnoremap <Leader>r :s///g<Left><Left>
+xnoremap <Leader>rc :s///gc<Left><Left><Left>
+
+" Type a replacement term and press . to repeat the replacement again. Useful
+" for replacing a few instances of the term (comparable to multiple cursors).
+nnoremap <silent> s* :let @/='\<'.expand('<cword>').'\>'<CR>cgn
+xnoremap <silent> s* "sy:let @/=@s<CR>cgn
+
+" Clear search highlights.
+map <Leader><Space> :let @/=''<CR>
+nnoremap <silent> // :noh<CR>
+
+" Format paragraph (selected or not) to 80 character lines.
+nnoremap <Leader>g gqap
+xnoremap <Leader>g gqa
+
+" Better indentation.
+vnoremap < <gv  " better indentation
+vnoremap > >gv  " better indentation
+
+" Prevent x from overriding what's in the clipboard.
+noremap x "_x
+noremap X "_x
+
+" Prevent selecting and pasting from overwriting what you originally copied.
+xnoremap p pgvy
+
+" Keep cursor at the bottom of the visual selection after you yank it.
+vmap y ygv<Esc>
+
+" Edit Vim config file in a new tab.
+map <Leader>ev :tabnew $MYVIMRC<CR>
+
+" Source Vim config file.
+map <Leader>sv :source $MYVIMRC<CR>
+
+" Toggle spell check.
+map <F5> :setlocal spell!<CR>
+
+" Toggle relative line numbers and regular line numbers.
+nmap <F6> :set invrelativenumber<CR>
+
+" Automatically fix the last misspelled word and jump back to where you were.
+"   Taken from this talk: https://www.youtube.com/watch?v=lwD8G1P52Sk
+nnoremap <leader>sp :normal! mz[s1z=`z<CR>
+
+" Toggle visually showing all whitespace characters.
+noremap <F7> :set list!<CR>
+inoremap <F7> <C-o>:set list!<CR>
+cnoremap <F7> <C-c>:set list!<CR>
+
+" Save with Ctrl-s
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <ESC>:w<CR>
+
+" Save as sudo
+ca w!! w !sudo tee "%"
+
+" Open a terminal
+nnoremap <C-w>t :terminal<CR>
+
+" Start Markdown Preview
+map <Leader>mp :MarkdownPreview<CR>
+
+" Stop Markdown Preview
+map <Leader>ms :MarkdownPreviewStop<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PLUGIN SETTINGS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Netrw
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Netrw
+  let g:netrw_banner = 0
+  let g:netrw_liststyle = 3
+  let g:netrw_browse_split = 4
+  let g:netrw_altv = 1
+  let g:netrw_winsize = 20
+  let g:NetrwIsOpen=0
+
+  function! OpenToRight()
+    :normal v
+    let g:path=expand('%:p')
+    execute 'q!'
+    execute 'belowright vnew' g:path
+    :normal <C-w>l
+  endfunction
+
+  function! OpenBelow()
+    :normal v
+    let g:path=expand('%:p')
+    execute 'q!'
+    execute 'belowright new' g:path
+    :normal <C-w>l
+  endfunction
+
+  function! OpenTab()
+    :normal v
+    let g:path=expand('%:p')
+    execute 'q!'
+    execute 'tabedit' g:path
+    :normal <C-w>l
+  endfunction
+
+  function! NetrwMappings()
+      " Hack fix to make ctrl-l work properly
+      noremap <buffer> <A-l> <C-w>l
+      noremap <buffer> <C-l> <C-w>l
+      noremap <silent> <A-f> :call ToggleNetrw()<CR>
+      noremap <buffer> V :call OpenToRight()<cr>
+      noremap <buffer> H :call OpenBelow()<cr>
+      noremap <buffer> T :call OpenTab()<cr>
+  endfunction
+
+  augroup netrw_mappings
+      autocmd!
+      autocmd filetype netrw call NetrwMappings()
+  augroup END
+
+  " Allow for netrw to be toggled
+  function! ToggleNetrw()
+      if g:NetrwIsOpen
+          let i = bufnr("$")
+          while (i >= 1)
+              if (getbufvar(i, "&filetype") == "netrw")
+                  silent exe "bwipeout " . i
+              endif
+              let i-=1
+          endwhile
+          let g:NetrwIsOpen=0
+      else
+          let g:NetrwIsOpen=1
+          silent Lexplore
+      endif
+  endfunction
+
+" Manually toggle Netrw
+nmap <leader>n :Lexplore<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tagbar
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " toggle tagbar display
 map <F4> :TagbarToggle<CR>
 " autofocus on tagbar open
 let g:tagbar_autofocus = 1
 
-" NERDTree -----------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Hexokinase
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:Hexokinase_highlighters = ['backgroundfull']
 
-" toggle nerdtree display
-map <F3> :NERDTreeToggle<CR>
-" open nerdtree with the current file selected
-nmap ,t :NERDTreeFind<CR>
-" don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
-
-" Enable folder icons
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
-
-" Fix directory colors
-highlight! link NERDTreeFlags NERDTreeDir
-
-" Remove expandable arrow
-let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
-let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
-let NERDTreeDirArrowExpandable = "\u00a0"
-let NERDTreeDirArrowCollapsible = "\u00a0"
-let NERDTreeNodeDelimiter = "\x07"
-
-" Autorefresh on tree focus
-function! NERDTreeRefresh()
-    if &filetype == "nerdtree"
-        silent exe substitute(mapcheck("R"), "<CR>", "", "")
-    endif
-endfunction
-
-autocmd BufEnter * call NERDTreeRefresh()
-
-" Tasklist ------------------------------
-
-" show pending tasks list
-map <F2> :TaskList<CR>
-
-" Neomake ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Neomake
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run linter on write
 autocmd! BufWritePost * Neomake
 
@@ -265,7 +359,9 @@ let g:neomake_python_flake8_maker.exe = 'python3.8 -m flake8'
 " Disable error messages inside the buffer, next to the problematic line
 let g:neomake_virtualtext_current_error = 0
 
-" fzf ------------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fzf
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " This is the default extra key bindings
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -275,6 +371,18 @@ let g:fzf_action = {
 " Default fzf layout
 " - down / up / left / right
 let g:fzf_layout = { 'down': '~40%' }
+
+" Previews (ccat replaces cat or bat)
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, 
+    \ {'options': ['--layout=reverse',
+    \ '--info=inline',
+    \ '--preview',
+    \ 'ccat {} | head -200']},
+    \ <bang>0)
+
+" size and position of preview
+let g:fzf_preview_window = 'right:60%'
 
 " In Neovim, you can set up fzf window using a Vim command
 let g:fzf_layout = { 'window': 'enew' }
@@ -302,30 +410,20 @@ let g:fzf_colors =
 " previous-history instead of down and up. If you don't like the change,
 " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
 
+" find buffers
+nmap <leader>b :Buffers<CR>
+" file files
+nmap <leader>f :Files<CR>
+" find lines
+nmap <leader>l :Lines<CR>
+" find tags
+nmap <leader>t :Tags<CR>
+" find history
+nmap <leader>h :History<CR>
 
-" file finder mapping -----------------------------
-nmap ,e :Files<CR>
-" tags (symbols) in current file finder mapping
-nmap ,g :BTag<CR>
-" the same, but with the word under the cursor pre filled
-nmap ,wg :execute ":BTag " . expand('<cword>')<CR>
-" tags (symbols) in all files finder mapping
-nmap ,G :Tags<CR>
-" the same, but with the word under the cursor pre filled
-nmap ,wG :execute ":Tags " . expand('<cword>')<CR>
-" general code finder in current file mapping
-nmap ,f :BLines<CR>
-" the same, but with the word under the cursor pre filled
-nmap ,wf :execute ":BLines " . expand('<cword>')<CR>
-" general code finder in all files mapping
-nmap ,F :Lines<CR>
-" the same, but with the word under the cursor pre filled
-nmap ,wF :execute ":Lines " . expand('<cword>')<CR>
-" commands finder mapping
-nmap ,c :Commands<CR>
-
-" Deoplete -----------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Deoplete
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use deoplete.
 let g:python3_host_prog = '/usr/bin/python3.8'
 call deoplete#custom#option('enable_at_startup', 1)
@@ -337,8 +435,9 @@ let g:deoplete#csources#go#sort_class = ['package', 'func', 'type', 'var', 'cons
 let g:context_filetype#same_filetypes = {}
 let g:context_filetype#same_filetypes._ = '_'
 
-" Jedi-vim ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Jedi-vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Disable autocompletion (using deoplete instead)
 let g:jedi#completions_enabled = 0
 
@@ -352,21 +451,24 @@ let g:jedi#goto_assignments_command = ',a'
 " Go to definition in new tab
 nmap ,D :tab split<CR>:call jedi#goto()<CR>
 
-" Ack.vim ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ack.vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " mappings
 nmap ,r :Ack
 nmap ,wr :execute ":Ack " . expand('<cword>')<CR>
 
-" Window Chooser ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Window Chooser
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " mapping
 nmap  -  <Plug>(choosewin)
 " show big letters
 let g:choosewin_overlay_enable = 1
 
-" Signify ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Signify
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " this first setting decides in which order try to guess your current vcs
 " UPDATE it to reflect your preferences, it will speed up opening files
 let g:signify_vcs_list = ['git', 'hg']
@@ -381,29 +483,31 @@ highlight SignifySignAdd    cterm=bold ctermbg=237  ctermfg=119
 highlight SignifySignDelete cterm=bold ctermbg=237  ctermfg=167
 highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 
-" Autoclose ------------------------------
-
-" Fix to let ESC work as espected with Autoclose plugin
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autoclose 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fix to let ESC work as expected with Autoclose plugin
 " (without this, when showing an autocompletion window, ESC won't leave insert
 "  mode)
 let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
-" Yankring -------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Yankring
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:yankring_history_dir = '~/.config/nvim/'
 " Fix for yankring and neovim problem when system has non-text things
 " copied in clipboard
 let g:yankring_clipboard_monitor = 0
 
-" Airline ------------------------------
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Airline
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'jellybeans'
 let g:airline#extensions#whitespace#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " Fancy Symbols!!
-
 if fancy_symbols_enabled
     let g:webdevicons_enable = 1
 
@@ -422,19 +526,29 @@ else
     let g:webdevicons_enable = 0
 endif
 
-" plasticboy/vim-markdown-------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" plasticboy/vim-markdown
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType markdown let b:sleuth_automatic=0
 autocmd Filetype markdown let conceallevel=0
 autocmd FileType markdown normal zR
 let g:vim_markdown_frontmatter=1
 
-" iamcco/markdown-preview.nvim--------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" iamcco/markdown-preview.nvim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:mkdp_refresh_slow=1
 let g:mkdp_markdown_css='/usr/local/share/md/github-markdown.css'
 let g:mkdp_browser='firefox'
 let g:mkdp_auto_close=0
 
-" VimWiki----------------------------
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VimWiki
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vimwiki_list = [{'path': '~/Documents/Vimwiki/','syntax': 'markdown', 'ext': '.md'}]
 au BufRead,BufNewFile *.wiki set filetype=vimwiki
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fast editing and reloading of vimrc configs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd! bufwritepost $MYVIMRC source $MYVIMRC
