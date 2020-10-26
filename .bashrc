@@ -149,12 +149,16 @@ alias xterm="x-terminal-emulator"
 alias uxterm="x-terminal-emulator"
 alias lxterm="x-terminal-emulator"
 
+# manage wireguard vpn configs
 alias w0u="systemctl start wg-quick@wg0.service"
 alias w0d="systemctl stop wg-quick@wg0.service"
 alias w1u="systemctl start wg-quick@wg1.service"
 alias w1d="systemctl stop wg-quick@wg1.service"
 alias w2u="systemctl start wg-quick@wg2.service"
 alias w2d="systemctl stop wg-quick@wg2.service"
+
+# copy wireguard vpn configs from current directory to
+# /etc/wireguard.  Must be root or use "sudo su" first
 alias wgxfr="cp -f wg*.conf /etc/wireguard/"
 
 # use powerline go
@@ -169,6 +173,10 @@ function _update_ps1() {
 alias fzf='fzf --preview="ccat {}"'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPS="--extended"
+
+# easily reset usb devices
+# requires "usbreset-helper"
+alias usbreset="usbreset-helper"
 
 # icons for lf
 export LF_ICONS="\
