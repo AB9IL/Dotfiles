@@ -47,7 +47,7 @@ URxvt*font:		xft:BitstreamVeraSansMono Nerd Font Mono:size=10
 URxvt*boldffont:	xft:BitstreamVeraSansMono Bold Nerd Font Bold:bold:size=10
 URxvt*italicfont:	xft:BitstreamVeraSansMono Nerd Font Oblique:size=10
 URxvt*boldItalicfont:	xft:BitstreamVeraSansMono Nerd Font Bold Oblique:size=10
-URxvt*urlLauncher: /usr/bin/xdg-open
+URxvt*urlLauncher: x-www-browser
 URxvt*matcher.button: 1
 URxvt*letterSpace: -1
 URxvt*lineSpace: 0
@@ -69,7 +69,7 @@ URxvt*keysym.C-k: perl:font-size:increase
 URxvt*keysym.C-Down: perl:font-size:decrease
 URxvt*keysym.C-j: perl:font-size:decrease
 URxvt*keysym.M-u: perl:url-select:select_next
-URxvt*url-select.launcher: firefox
+URxvt*url-select.launcher: x-www-browser
 URxvt*url-select.underline: true
 URxvt*keysym.M-Escape: perl:keyboard-select:activate
 URxvt*keysym.Control-Alt-C: perl:clipboard:copy
@@ -82,6 +82,22 @@ URxvt*tabbed.tabbar-fg: 2
 URxvt*tabbed.tabbar-bg: 0
 URxvt*tabbed.tab-fg: 3
 URxvt*tabbed.tab-bg: 0
+
+UXTerm*faceName: BitstreamVeraSansMono Nerd Font Mono
+UXTerm*faceSize: 10
+UXTerm*vt100*geometry: 120x35+c+c
+UXTerm*vt100.translations: #override \
+	Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
+	Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
+UXTerm*saveLines: 2000
+
+xterm*faceName: BitstreamVeraSansMono Nerd Font Mono
+xterm*faceSize: 10
+xterm*vt100*geometry: 120x35+c+c
+xterm*vt100.translations: #override \
+	Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
+	Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
+xterm*saveLines: 2000
 
 ! █▓▒░ default dpi mode
 Xft*dpi       : 96
@@ -100,7 +116,11 @@ Xft*rgba      : rgb
 !Xft*antialias: 1
 !Xft*rgba: rgb
 
-xterm*faceName: BitstreamVeraSansMono Nerd Font Mono
-xterm*faceSize: 10
-xterm*vt100*geometry: 120x35+c+c
-xterm*saveLines: 2000
+! ------------------------------------------------------------------------------
+! ROFI Color theme glue_pro_blue
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+rofi.color-window: #393939, #393939, #268bd2
+rofi.color-normal: #393939, #ffffff, #393939, #268bd2, #ffffff
+rofi.color-active: #393939, #268bd2, #393939, #268bd2, #205171
+rofi.color-urgent: #393939, #f3843d, #393939, #268bd2, #ffc39c
