@@ -1,7 +1,5 @@
 " CONFIGURATION FOR NEOVIM ONLY
 " NOT SUITABLE FOR LEGACY VIM
-let using_neovim = has('nvim')
-let using_vim = !using_neovim
 
 " ============================================================================
 " Plugins
@@ -27,14 +25,14 @@ Plug 'arielrossanigo/dir-configs-override.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-scripts/AutoComplPop'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'majutsushi/tagbar'
 Plug 'vim-scripts/IndexedSearch'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'fisadev/FixedTaskList.vim'
-if using_neovim && vim_plug_just_installed
+if vim_plug_just_installed
     Plug 'Shougo/deoplete.nvim', {'do': ':autocmd VimEnter * UpdateRemotePlugins'}
 else
     Plug 'Shougo/deoplete.nvim'
@@ -59,15 +57,15 @@ Plug 'valloric/MatchTagAlways'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
-Plug 'vim-scripts/YankRing.vim'
 Plug 'neomake/neomake'
 Plug 'ryanoasis/vim-devicons'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
+Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app && yarn install'}
 Plug 'vimwiki/vimwiki'
+Plug 'tools-life/taskwiki'
 call plug#end()
 
 " Install plugins the first time vim runs
@@ -79,48 +77,56 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Basic settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+syntax enable
 let fancy_symbols_enabled = 0
 let mapleader="\<Space>"
+set autoindent
 set clipboard+=unnamedplus
 set colorcolumn=80
 set complete+=kspell
 set completeopt=menuone,longest
 set cursorline
 set encoding=utf-8
+set expandtab
 set hidden
 set history=500
+set hlsearch
+set incsearch
 set nowrap
 set nobackup
+set noshowmode
+set noswapfile
 set mouse=a
 set pastetoggle=<f2>
-set path+=**
+set path+=.,**
 set ruler
 set shell=/bin/bash
 set tabstop=4
 set textwidth=120
 set softtabstop=4
 set title
-set shiftwidth=4
-set nu
+set number
 set fillchars+=vert:\
 set completeopt+=noinsert
 set completeopt-=preview
-set scrolloff=3
+set scrolloff=8
+set shiftwidth=4
+set shiftround
 set shortmess+=c
+set showtabline=2
+set smartindent
+set smarttab
+set softtabstop=4
 set splitbelow
 set splitright
-set wildmode=list:longest
+set undodir=~/.config/nvim/undodir
+set undofile
+set updatetime=1000
+se wildmode=list:longest
 
 " Set colors and transparency
 set background = "dark"
-if has('gui_running') || using_neovim || (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256')
-    if !has('gui_running')
-        let &t_Co = 256
-    endif
-    colorscheme jellybeans
-else
-    colorscheme plastic
-endif
+colorscheme jellybeans
 set termguicolors
 hi Normal guibg=NONE ctermbg=NONE
 hi NonText guibg=NONE ctermbg=NONE
@@ -151,6 +157,9 @@ fun! Writer()
 endfun
 com! WR call Writer()
 
+" Prevent rezize glitch on open
+autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Basic mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -176,12 +185,9 @@ nnoremap <C-h> <C-w><C-h>
 nnoremap <C-k> <C-w><C-k>
 nnoremap <C-j> <C-w><C-j>
 
-" Cycle through splits.
-nnoremap <S-Tab> <C-w>w
-
 " Cycle through buffers.
 nnoremap <Tab> :bnext<cr>
-nnoremap <S-Tab> :bprevious<cr>
+nnoremap <S-Tab> :bprev<cr>
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.
@@ -492,39 +498,24 @@ highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Yankring
+" Lightline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:yankring_history_dir = '~/.config/nvim/'
-" Fix for yankring and neovim problem when system has non-text things
-" copied in clipboard
-let g:yankring_clipboard_monitor = 0
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Airline
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:airline_powerline_fonts = 1
-let g:airline_theme = 'jellybeans'
-let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-
-" Fancy Symbols!!
-if fancy_symbols_enabled
-    let g:webdevicons_enable = 1
-
-    " custom airline symbols
-    if !exists('g:airline_symbols')
-       let g:airline_symbols = {}
-    endif
-    let g:airline_left_sep = ''
-    let g:airline_left_alt_sep = ''
-    let g:airline_right_sep = ''
-    let g:airline_right_alt_sep = ''
-    let g:airline_symbols.branch = '⭠'
-    let g:airline_symbols.readonly = '⭤'
-    let g:airline_symbols.linenr = '⭡'
-else
-    let g:webdevicons_enable = 0
-endif
+let g:lightline = {
+      \ 'colorscheme': 'jellybeans',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ] ]
+      \ },
+      \ 'tabline': {
+      \   'left': [ ['buffers'] ],
+      \   'right': [ ['close'] ]
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers'
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel'
+      \ }
+      \ }
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " plasticboy/vim-markdown
