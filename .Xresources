@@ -119,6 +119,7 @@ Xft*rgba      : rgb
 ! ------------------------------------------------------------------------------
 ! ROFI Color theme glue_pro_blue
 ! ------------------------------------------------------------------------------
+rofi.font: Arimo Nerd Font 12
 rofi.color-enabled: true
 rofi.color-window: #393939, #393939, #268bd2
 rofi.color-normal: #393939, #ffffff, #393939, #268bd2, #ffffff
