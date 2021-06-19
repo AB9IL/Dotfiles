@@ -10,8 +10,7 @@ if !filereadable(vim_plug_path)
     echo "Installing Vim-plug..."
     echo ""
     silent !mkdir -p ~/.config/nvim/autoload
-    silent !curl -fLo ~/.config/nvim/autoload/plug.vim \
-	--create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     let vim_plug_just_installed = 1
 endif
 
@@ -21,51 +20,41 @@ if vim_plug_just_installed
 endif
 
 call plug#begin("~/.config/nvim/plugged")
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-gocode.vim'
+Plug 'prabirshrestha/asyncomplete-emmet.vim'
+Plug 'high-moctane/asyncomplete-nextword.vim'
+Plug 'piec/vim-lsp-gopls'
+Plug 'thomasfaingnaert/vim-lsp-snippets'
+Plug 'thomasfaingnaert/vim-lsp-ultisnips'
 Plug 'arielrossanigo/dir-configs-override.vim'
 Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'majutsushi/tagbar'
-Plug 'vim-scripts/IndexedSearch'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'fisadev/FixedTaskList.vim'
-if vim_plug_just_installed
-    Plug 'Shougo/deoplete.nvim', {'do': ':autocmd VimEnter * UpdateRemotePlugins'}
-else
-    Plug 'Shougo/deoplete.nvim'
-endif
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'deoplete-plugins/deoplete-go', {'do': 'make'}
-Plug 'nsf/gocode', {'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh'}
-Plug 'Shougo/context_filetype.vim'
-Plug 'davidhalter/jedi-vim'
 Plug 'Townk/vim-autoclose'
 Plug 'tpope/vim-surround'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'jeetsukumaran/vim-indentwise'
-Plug 'sheerun/vim-polyglot'
 Plug 'mileszs/ack.vim'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 't9md/vim-choosewin'
+Plug 'dense-analysis/ale'
 Plug 'fisadev/vim-isort'
-Plug 'valloric/MatchTagAlways'
-Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
-Plug 'neomake/neomake'
 Plug 'ryanoasis/vim-devicons'
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app && yarn install'}
+Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
 Plug 'vimwiki/vimwiki'
-Plug 'tools-life/taskwiki'
 call plug#end()
 
 " Install plugins the first time vim runs
@@ -85,6 +74,7 @@ set clipboard+=unnamedplus
 set colorcolumn=80
 set complete+=kspell
 set completeopt=menuone,longest
+set conceallevel=2
 set cursorline
 set encoding=utf-8
 set expandtab
@@ -102,7 +92,7 @@ set path+=.,**
 set ruler
 set shell=/bin/bash
 set tabstop=4
-set textwidth=120
+set textwidth=0
 set softtabstop=4
 set title
 set number
@@ -114,6 +104,7 @@ set shiftwidth=4
 set shiftround
 set shortmess+=c
 set showtabline=2
+set signcolumn=yes
 set smartindent
 set smarttab
 set softtabstop=4
@@ -122,14 +113,17 @@ set splitright
 set undodir=~/.config/nvim/undodir
 set undofile
 set updatetime=1000
-se wildmode=list:longest
+set wildmode=list:longest
+set wrapmargin=0
 
 " Set colors and transparency
-set background = "dark"
 colorscheme jellybeans
 set termguicolors
-hi Normal guibg=NONE ctermbg=NONE
-hi NonText guibg=NONE ctermbg=NONE
+hi clear LineNr
+hi clear SignColumn
+
+hi! link markdownItalic Italic
+hi! link markdownBold Bold
 
 " Clean up trailing whitespace on save
 autocmd BufWritePre *.py :%s/\s\+$//e
@@ -142,8 +136,9 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-" Open certain files as Markdown
+" Set filetype syntax and behavior 
 au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mdwn,*md set ft=markdown
+au BufNewFile,BufRead conf,config,*.conf,*.strm,*.xspf set ft=config
 
 " Writer mode
 fun! Writer()
@@ -161,9 +156,70 @@ com! WR call Writer()
 autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Register Languages 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Golang
+let g:lsp_gopls_ignore_warning = 1
+
+" Lua
+if executable('lua-lsp')
+    au User lsp_setup call lsp#register_server({
+                \ 'name': 'lua-lsp',
+                \ 'cmd': {server_info->[&shell, &shellcmdflag, 'lua-lsp']},
+                \ 'whitelist': ['lua'],
+                \ })
+endif
+
+" Vim
+if executable('vim-language-server')
+  augroup LspVim
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'vim-language-server',
+        \ 'cmd': {server_info->['vim-language-server', '--stdio']},
+        \ 'whitelist': ['vim'],
+        \ 'initialization_options': {
+        \   'vimruntime': $VIMRUNTIME,
+        \   'runtimepath': &rtp,
+        \ }})
+  augroup END
+endif
+
+" Python 
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ 'workspace_config': {'pyls': {'plugins': {'pydocstyle': {'enabled': v:true}}}}
+        \ })
+endif
+
+" Bash
+if executable('bash-language-server')
+  augroup LspBash
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'bash-language-server',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+          \ 'allowlist': ['sh'],
+          \ })
+  augroup END
+endif
+
+" HTML
+if executable('html-languageserver')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'html-languageserver',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'html-languageserver --stdio']},
+    \ 'whitelist': ['html'],
+  \ })
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Basic mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Seamlessly treat visual lines as actual lines when moving around.
 noremap j gj
 noremap k gk
@@ -268,6 +324,11 @@ map <Leader>ms :MarkdownPreviewStop<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " PLUGIN SETTINGS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Asyncomplete
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:asyncomplete_auto_completeopt = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Netrw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Netrw
@@ -351,19 +412,22 @@ let g:tagbar_autofocus = 1
 let g:Hexokinase_highlighters = ['backgroundfull']
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Neomake
+" ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Run linter on write
-autocmd! BufWritePost * Neomake
+let g:ale_linters = {'python': ['flake8','yapf']}
 
-" Check code as python3 by default
-let g:neomake_python_python_maker = neomake#makers#ft#python#python()
-let g:neomake_python_flake8_maker = neomake#makers#ft#python#flake8()
-let g:neomake_python_python_maker.exe = 'python3.8 -m py_compile'
-let g:neomake_python_flake8_maker.exe = 'python3.8 -m flake8'
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'python': ['flake8','yapf','pydocstyle'],
+\}
 
-" Disable error messages inside the buffer, next to the problematic line
-let g:neomake_virtualtext_current_error = 0
+let g:ale_fixers = {'*': [], 'python': ['autopep8', 'isort']}
+let g:ale_fix_on_save = 1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" isort
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vim_isort_python_version = 'python3'
+let g:vim_isort_map = '<C-i>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " fzf
@@ -393,7 +457,7 @@ let g:fzf_preview_window = 'right:60%'
 " In Neovim, you can set up fzf window using a Vim command
 let g:fzf_layout = { 'window': 'enew' }
 let g:fzf_layout = { 'window': '-tabnew' }
-let g:fzf_layout = { 'window': '10split enew' }
+let g:fzf_layout = { 'window': '15split enew' }
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
@@ -420,42 +484,13 @@ let g:fzf_colors =
 nmap <leader>b :Buffers<CR>
 " file files
 nmap <leader>f :Files<CR>
+nmap <c-p> :Files<CR>
 " find lines
 nmap <leader>l :Lines<CR>
 " find tags
 nmap <leader>t :Tags<CR>
 " find history
 nmap <leader>h :History<CR>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Deoplete
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use deoplete.
-let g:python3_host_prog = '/usr/bin/python3.8'
-call deoplete#custom#option('enable_at_startup', 1)
-call deoplete#custom#option('ignore_case', 1)
-call deoplete#custom#option('smart_case', 1)
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'bin/gocode'
-let g:deoplete#csources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-" complete with words from any opened file
-let g:context_filetype#same_filetypes = {}
-let g:context_filetype#same_filetypes._ = '_'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Jedi-vim
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Disable autocompletion (using deoplete instead)
-let g:jedi#completions_enabled = 0
-
-" All these mappings work only for python code:
-" Go to definition
-let g:jedi#goto_command = ',d'
-" Find ocurrences
-let g:jedi#usages_command = ',o'
-" Find assignments
-let g:jedi#goto_assignments_command = ',a'
-" Go to definition in new tab
-nmap ,D :tab split<CR>:call jedi#goto()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ack.vim
@@ -490,6 +525,13 @@ highlight SignifySignDelete cterm=bold ctermbg=237  ctermfg=167
 highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ultisnips
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autoclose 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Fix to let ESC work as expected with Autoclose plugin
@@ -501,13 +543,13 @@ let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 " Lightline
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
+      \ 'colorscheme': 'selenized_black',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ] ]
       \ },
       \ 'tabline': {
       \   'left': [ ['buffers'] ],
-      \   'right': [ ['close'] ]
+      \   'right': [ [''] ]
       \ },
       \ 'component_expand': {
       \   'buffers': 'lightline#bufferline#buffers'
@@ -516,6 +558,8 @@ let g:lightline = {
       \   'buffers': 'tabsel'
       \ }
       \ }
+
+au bufwritepost,TextChanged,TextChangedI call lightline#update()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " plasticboy/vim-markdown
