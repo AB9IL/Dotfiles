@@ -22,14 +22,14 @@ endif
 call plug#begin("~/.config/nvim/plugged")
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-gocode.vim'
-Plug 'prabirshrestha/asyncomplete-emmet.vim'
 Plug 'high-moctane/asyncomplete-nextword.vim'
 Plug 'piec/vim-lsp-gopls'
 Plug 'thomasfaingnaert/vim-lsp-snippets'
 Plug 'thomasfaingnaert/vim-lsp-ultisnips'
+Plug 'SirVer/ultisnips'
 Plug 'arielrossanigo/dir-configs-override.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'vim-scripts/AutoComplPop'
@@ -73,7 +73,7 @@ set autoindent
 set clipboard+=unnamedplus
 set colorcolumn=80
 set complete+=kspell
-set completeopt=menuone,longest
+set completeopt=menuone,noinsert
 set conceallevel=2
 set cursorline
 set encoding=utf-8
@@ -136,7 +136,7 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-" Set filetype syntax and behavior 
+" Set filetype syntax and behavior
 au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mdwn,*md set ft=markdown
 au BufNewFile,BufRead conf,config,*.conf,*.strm,*.xspf set ft=config
 
@@ -156,10 +156,26 @@ com! WR call Writer()
 autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Register Languages 
+" Register Languages
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Golang
-let g:lsp_gopls_ignore_warning = 1
+if executable('gopls')
+    let g:go_def_mode='gopls'
+    let g:go_info_mode='gopls'
+    let g:lsp_gopls_ignore_warning = 1
+    augroup LspGo
+      au!
+      autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'go-lang',
+          \ 'cmd': {server_info->['gopls']},
+          \ 'whitelist': ['go'],
+          \ })
+      autocmd FileType go setlocal omnifunc=lsp#complete
+      "autocmd FileType go nmap <buffer> gd <plug>(lsp-definition)
+      "autocmd FileType go nmap <buffer> ,n <plug>(lsp-next-error)
+      "autocmd FileType go nmap <buffer> ,p <plug>(lsp-previous-error)
+    augroup END
+endif
 
 " Lua
 if executable('lua-lsp')
@@ -172,9 +188,13 @@ endif
 
 " Vim
 if executable('vim-language-server')
-  augroup LspVim
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
+    let g:markdown_fenced_languages = [
+        \ 'vim',
+        \ 'help'
+        \]
+    augroup LspVim
+      autocmd!
+      autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'vim-language-server',
         \ 'cmd': {server_info->['vim-language-server', '--stdio']},
         \ 'whitelist': ['vim'],
@@ -182,10 +202,10 @@ if executable('vim-language-server')
         \   'vimruntime': $VIMRUNTIME,
         \   'runtimepath': &rtp,
         \ }})
-  augroup END
+    augroup END
 endif
 
-" Python 
+" Python
 if executable('pyls')
     " pip install python-language-server
     au User lsp_setup call lsp#register_server({
@@ -203,7 +223,7 @@ if executable('bash-language-server')
     autocmd User lsp_setup call lsp#register_server({
           \ 'name': 'bash-language-server',
           \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
-          \ 'allowlist': ['sh'],
+          \ 'whitelist': ['sh'],
           \ })
   augroup END
 endif
@@ -214,7 +234,16 @@ if executable('html-languageserver')
     \ 'name': 'html-languageserver',
     \ 'cmd': {server_info->[&shell, &shellcmdflag, 'html-languageserver --stdio']},
     \ 'whitelist': ['html'],
-  \ })
+    \ })
+endif
+
+" typescript
+if executable('typescript-language-server')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'typescript-language-server',
+    \ 'cmd': {server_info->['typescript-language-server']},
+    \ 'whitelist': ['typescript'],
+    \ })
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -414,15 +443,24 @@ let g:Hexokinase_highlighters = ['backgroundfull']
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_linters = {'python': ['flake8','yapf']}
-
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'python': ['flake8','yapf','pydocstyle'],
+let g:ale_linters = {
+\   'go': ['gopls'],
+\   'lua': ['luacheck'],
+\   'python': ['autopep8','isort','yapf'],
+\   'sh': ['shfmt'],
+\   'typescript': ['deno','tslint'],
 \}
 
-let g:ale_fixers = {'*': [], 'python': ['autopep8', 'isort']}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines','trim_whitespace'],
+\   'lua': ['luafmt','remove_trailing_lines','trim_whitespace'],
+\   'python': ['autopep8','isort','yapf'],
+\   'sh': ['shfmt','remove_trailing_lines','trim_whitespace'],
+\   'typescript': ['deno','tslint'],
+\}
+
 let g:ale_fix_on_save = 1
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " isort
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -444,11 +482,11 @@ let g:fzf_layout = { 'down': '~40%' }
 
 " Previews (ccat replaces cat or bat)
 command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, 
+    \ call fzf#vim#files(<q-args>,
     \ {'options': ['--layout=reverse',
     \ '--info=inline',
     \ '--preview',
-    \ 'ccat {} | head -200']},
+    \ 'ccat --color="always" {} | head -200']},
     \ <bang>0)
 
 " size and position of preview
@@ -485,8 +523,10 @@ nmap <leader>b :Buffers<CR>
 " file files
 nmap <leader>f :Files<CR>
 nmap <c-p> :Files<CR>
-" find lines
+" find lines in loaded buffers
 nmap <leader>l :Lines<CR>
+" find lines in current buffer
+nmap <leader>s :BLines<cr>
 " find tags
 nmap <leader>t :Tags<CR>
 " find history
@@ -528,11 +568,11 @@ highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
 " Ultisnips
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autoclose 
+" Autoclose
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Fix to let ESC work as expected with Autoclose plugin
 " (without this, when showing an autocompletion window, ESC won't leave insert
@@ -565,7 +605,7 @@ au bufwritepost,TextChanged,TextChangedI call lightline#update()
 " plasticboy/vim-markdown
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd FileType markdown let b:sleuth_automatic=0
-autocmd Filetype markdown let conceallevel=0
+autocmd Filetype markdown let conceallevel=2
 autocmd FileType markdown normal zR
 let g:vim_markdown_frontmatter=1
 
