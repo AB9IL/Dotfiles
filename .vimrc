@@ -1,59 +1,7 @@
 " -----------------------------------------------------------------------------
-" This config is targeted for Vim 8.0+
+" This config is targeted for Vim 8.0+ and NO PLUGINS
 " -----------------------------------------------------------------------------
 set viminfo=
-" -----------------------------------------------------------------------------
-" Plugins - use the builtin plugin manager
-" -----------------------------------------------------------------------------
-" To install vim-plug, execute:
-" curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-"    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-call plug#begin('~/.vim/plugged')
-
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'vim-scripts/AutoComplPop'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'Townk/vim-autoclose'
-Plug 'tpope/vim-surround'
-Plug 'lilydjwg/colorizer'
-Plug 'mattn/emmet-vim'
-Plug 'morhetz/gruvbox'
-Plug 'joshdick/onedark.vim'
-Plug 'nanotech/jellybeans.vim'
-Plug 'tomasr/molokai'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'tpope/vim-fugitive'
-Plug 'ryanoasis/vim-devicons'
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install()}}
-Plug 'vimwiki/vimwiki'
-Plug 'vim-scripts/YankRing.vim'
-Plug 'cakebaker/scss-syntax.vim'
-Plug 'chr4/nginx.vim'
-Plug 'chrisbra/csv.vim'
-Plug 'ekalinin/dockerfile.vim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'jvirtanen/vim-hcl'
-Plug 'lifepillar/pgsql.vim'
-Plug 'othree/html5.vim'
-Plug 'pangloss/vim-javascript'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'stephpy/vim-yaml'
-Plug 'tmux-plugins/vim-tmux'
-Plug 'tpope/vim-git'
-Plug 'tpope/vim-liquid'
-Plug 'tpope/vim-rails'
-Plug 'vim-python/python-syntax'
-Plug 'vim-ruby/vim-ruby'
-Plug 'wgwoods/vim-systemd-syntax'
-
-call plug#end()
 " -----------------------------------------------------------------------------
 " Color settings
 " -----------------------------------------------------------------------------
@@ -63,23 +11,26 @@ if (has("termguicolors"))
   " https://github.com/vim/vim/issues/993#issuecomment-255651605
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
 else
   set t_Co=256
 endif
-set termguicolors
-" Enable syntax highlighting.
 
-" Set the color scheme.
-colorscheme jellybeans
+" Set up the colors.
 set background=dark
+colorscheme torte
 syntax on
 filetype on
 hi clear LineNr
 hi clear SignColumn
+hi EndOfBuffer guibg=NONE ctermbg=NONE
+hi CursorLine guibg=#202020 cterm=bold ctermbg=Yellow
+hi CursorColumn guibg=#202020 cterm=bold ctermbg=Yellow
+hi ColorColumn guibg=#303030 cterm=bold ctermbg=Yellow
 
-" ----------------------------------------------------------------------------
+" -----------------------------------------------------------------------------
 " Basic Settings
-"   Research any of these by running :help <setting>
+" Research any of these by running :help <setting>
 " -----------------------------------------------------------------------------
 let fancy_symbols_enabled=0
 let mapleader="\<Space>"
@@ -92,6 +43,7 @@ set colorcolumn=80
 set complete+=kspell
 set completeopt=menuone,longest
 set cryptmethod=blowfish2
+set cursorcolumn
 set cursorline
 set directory=/tmp//,.
 set encoding=utf-8
@@ -207,9 +159,9 @@ nnoremap <silent> // :noh<CR>
 nnoremap <Leader>g gqap
 xnoremap <Leader>g gqa
 
-" Better indentation.
-vnoremap < <gv  " better indentation
-vnoremap > >gv  " better indentation
+" Reselect visual selection after indenting.
+vnoremap < <gv
+vnoremap > >gv
 
 " Prevent x from overriding what's in the clipboard.
 noremap x "_x
@@ -227,6 +179,12 @@ map <Leader>ev :tabnew $MYVIMRC<CR>
 " Source Vim config file.
 map <Leader>sv :source $MYVIMRC<CR>
 
+" Allow gf to ceate and open files
+map gf :edit <cfile><CR>
+
+" Open the current file in the default program
+nmap <Leader>x :!xdg-open %<CR><CR>
+
 " Toggle spell check.
 map <F5> :setlocal spell!<CR>
 
@@ -234,7 +192,7 @@ map <F5> :setlocal spell!<CR>
 nmap <F6> :set invrelativenumber<CR>
 
 " Automatically fix the last misspelled word and jump back to where you were.
-"   Taken from this talk: https://www.youtube.com/watch?v=lwD8G1P52Sk
+" Taken from this talk: https://www.youtube.com/watch?v=lwD8G1P52Sk
 nnoremap <leader>sp :normal! mz[s1z=`z<CR>
 
 " Toggle visually showing all whitespace characters.
@@ -250,19 +208,19 @@ nnoremap <C-w>t :terminal<CR>
 " -----------------------------------------------------------------------------
 
 " Auto-resize splits when Vim gets resized.
-autocmd VimResized * wincmd =
+au VimResized * wincmd =
 
 " Update a buffer's contents on focus if it changed outside of Vim.
 au FocusGained,BufEnter * :checktime
 
 " Unset paste on InsertLeave.
-autocmd InsertLeave * silent! set nopaste
+au InsertLeave * silent! set nopaste
 
 " Make sure all types of requirements.txt files get syntax highlighting.
-autocmd BufNewFile,BufRead requirements*.txt set syntax=python
+au BufNewFile,BufRead requirements*.txt set syntax=python
 
 " Ensure tabs don't get converted to spaces in Makefiles.
-autocmd FileType make setlocal noexpandtab
+au FileType make setlocal noexpandtab
 
 " Only show the cursor line in the active buffer.
 augroup CursorLine
@@ -271,12 +229,13 @@ augroup CursorLine
     au WinLeave * setlocal nocursorline
 augroup END
 
-" Set filetype syntax and behavior 
+" Set filetype syntax and behavior
 au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mdwn,*md set ft=markdown
 au BufNewFile,BufRead conf,config,*.conf,*.strm,*.xspf set ft=config
+au BufNewFile,BufRead *.wiki set ft=vimwiki
 
 " Prevent rezize glitch on open
-autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
+au VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
 
 " ----------------------------------------------------------------------------
 " Basic commands
@@ -308,7 +267,7 @@ command! Todo call s:todo()
 function! s:profile(bang)
   if a:bang
     profile pause
-    noautocmd qall
+    noau qall
   else
     profile start /tmp/profile.log
     profile func *
@@ -328,188 +287,79 @@ inoremap <C-s> <ESC>:w<CR>
 " Open a terminal
 nnoremap <C-w>t :terminal<CR>
 
-" Start Markdown Preview
-map <Leader>mp :MarkdownPreview<CR>
+" Remove trailing whitespaces
+au BufWritePre * %s/\s\+$//e
+" Remove trailing newline
+au BufWritePre * %s/\n\+\%$//e
 
-" Stop Markdown Preview
-map <Leader>ms :MarkdownPreviewStop<CR>
+" Highlight yanked text
+augroup highlightYankedText
+    autocmd!
+    au TextYankPost * call FlashYankedText()
+augroup END
+function! FlashYankedText()
+    if (!exists('g:yankedTextMatches'))
+        let g:yankedTextMatches = []
+    endif
 
-" Remove excess whitespace on save
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
+    let matchId = matchadd('IncSearch', ".\\%>'\\[\\_.*\\%<']..")
+    let windowId = winnr()
 
-" -----------------------------------------------------------------------------
-" Plugin settings, mappings and autocommands
-" -----------------------------------------------------------------------------
-" Netrw
-  let g:netrw_banner = 0
-  let g:netrw_liststyle = 3
-  let g:netrw_browse_split = 4
-  let g:netrw_altv = 1
-  let g:netrw_winsize = 20
-  let g:NetrwIsOpen=0
+    call add(g:yankedTextMatches, [windowId, matchId])
+    call timer_start(500, 'DeleteTemporaryMatch')
+endfunction
+function! DeleteTemporaryMatch(timerId)
+    while !empty(g:yankedTextMatches)
+        let match = remove(g:yankedTextMatches, 0)
+        let windowID = match[0]
+        let matchID = match[1]
 
-  function! OpenToRight()
-    :normal v
-    let g:path=expand('%:p')
-    execute 'q!'
-    execute 'belowright vnew' g:path
-    :normal <C-w>l
-  endfunction
+        try
+            call matchdelete(matchID, windowID)
+        endtry
+    endwhile
+endfunction
 
-  function! OpenBelow()
-    :normal v
-    let g:path=expand('%:p')
-    execute 'q!'
-    execute 'belowright new' g:path
-    :normal <C-w>l
-  endfunction
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Status Line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Status Line Custom
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'Normal·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'V·Line',
+    \ '^V' : 'V·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'S·Line',
+    \ '^S' : 'S·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'V·Replace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal'
+    \}
 
-  function! OpenTab()
-    :normal v
-    let g:path=expand('%:p')
-    execute 'q!'
-    execute 'tabedit' g:path
-    :normal <C-w>l
-  endfunction
+set statusline=   " clear the statusline for when vimrc is reloaded
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+set statusline+=%3n\                                " buffer number
+set statusline+=%h%m%r%w\                           " flags
+set statusline+=%f\                                 " file name
+set statusline+=%=                                  " right align
+set statusline+=%{&fileformat}\ \|                  " file format
+set statusline+=\ %{strlen(&fenc)?&fenc:&enc}\ \|   " encoding
+set statusline+=\ %{strlen(&ft)?&ft:'none'}\        " filetype
+set statusline+=\ %<%p%%\                             " position
+set statusline+=\ %-4.(%l:%c%)\                     " offset
 
-  function! NetrwMappings()
-      " Hack fix to make ctrl-l work properly
-      noremap <buffer> <A-l> <C-w>l
-      noremap <buffer> <C-l> <C-w>l
-      noremap <silent> <A-f> :call ToggleNetrw()<CR>
-      noremap <buffer> V :call OpenToRight()<cr>
-      noremap <buffer> H :call OpenBelow()<cr>
-      noremap <buffer> T :call OpenTab()<cr>
-  endfunction
-
-  augroup netrw_mappings
-      autocmd!
-      autocmd filetype netrw call NetrwMappings()
-  augroup END
-
-  " Allow for netrw to be toggled
-  function! ToggleNetrw()
-      if g:NetrwIsOpen
-          let i = bufnr("$")
-          while (i >= 1)
-              if (getbufvar(i, "&filetype") == "netrw")
-                  silent exe "bwipeout " . i
-              endif
-              let i-=1
-          endwhile
-          let g:NetrwIsOpen=0
-      else
-          let g:NetrwIsOpen=1
-          silent Lexplore
-      endif
-  endfunction
-
-" Manually toggle Netrw
-nmap <leader>n :Lexplore<CR>
-
-" .............................................................................
-" junegunn/fzf.vim
-" .............................................................................
-
-let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
-
-" Customize fzf colors to match your color scheme.
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit',
-  \ 'ctrl-y': {lines -> setreg('*', join(lines, "\n"))}}
-
-" Launch fzf with CTRL+P.
-nnoremap <silent> <C-p> :FZF -m<CR>
-
-" Map a few common things to do with FZF.
-nnoremap <silent> <Leader><Enter> :Buffers<CR>
-nnoremap <silent> <Leader>l :Lines<CR>
-
-" Allow passing optional flags into the Rg command.
-"   Example: :Rg myterm -g '*.md'
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \ "rg --column --line-number --no-heading --color=always --smart-case " .
-  \ <q-args>, 1, fzf#vim#with_preview(), <bang>0)
-
-" .............................................................................
-" SirVer/ultisnips
-" .............................................................................
-
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
-" .............................................................................
-" Autoclose
-" .............................................................................
-
-" Fix to let ESC work as espected with Autoclose plugin
-" (without this, when showing an autocompletion window, ESC won't leave insert
-"  mode)
-let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
-
-" .............................................................................
-" Yankring
-" .............................................................................
-
-let g:yankring_history_dir = '~/.vim/'
-" Fix for yankring and neovim problem when system has non-text things
-" copied in clipboard
-let g:yankring_clipboard_monitor = 0
-
-" .............................................................................
-" plasticboy/vim-markdown
-" .............................................................................
-autocmd FileType markdown let b:sleuth_automatic=0
-autocmd Filetype markdown let conceallevel=0
-autocmd FileType markdown normal zR
-let g:vim_markdown_frontmatter=1
-
-" .............................................................................
-" iamcco/markdown-preview.nvim
-" .............................................................................
-let g:mkdp_refresh_slow=1
-let g:mkdp_markdown_css='~/.css/github-markdown.css'
-let g:mkdp_browser='firefox'
-let g:mkdp_auto_close=0
-
-" .............................................................................
-" VimWiki
-" .............................................................................
-let g:vimwiki_list = [{'path': '~/Vimwiki/','syntax': 'markdown', 'ext': '.md'}]
-au BufRead,BufNewFile *.wiki set filetype=vimwiki
-
-" .............................................................................
-" Airline
-" .............................................................................
-let g:airline_powerline_fonts = 0
-let g:airline_theme = 'jellybeans'
-let g:airline#extensions#whitespace#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:webdevicons_enable = 0
-
+" status bar colors
+hi StatusLine guifg=black guibg=white ctermfg=black ctermbg=white
 " .............................................................................
 " Fast editing and reloading of vimrc configs
 " .............................................................................
