@@ -1,6 +1,27 @@
 ###############################################################################
 # functions and exports
 ###############################################################################
+# manage wireguard
+# Copy conf files to /etc/wireguard and restrict their permissions
+function wgxfr() {
+    fd -d 2 -t file -e conf . | fzf -m --preview-window=hidden --layout=reverse | \
+    xargs -I{} sudo cp -f "{}" /etc/wireguard/
+    sudo chmod 640 /etc/wireguard/*
+}
+
+# Make a client / peer connection
+function wgup() {
+    basename -s .conf $(ls /etc/wireguard) | \
+    fzf --preview-window=hidden --layout=reverse | \
+    xargs -ro -d "\n" wg-quick up $*
+}
+
+# Break a connection
+function wgdn() {
+    wg 2>&1 | grep interface | awk '{print $5}' | sed 's/://g' | \
+    fzf --preview-window=hidden --layout=reverse | xargs -ro -d '\n' wg-quick down $*
+}
+
 # use powerline go
 function _update_ps1() {
     PS1="$(/usr/local/bin/powerline-go -colorize-hostname -condensed -error $?)"
