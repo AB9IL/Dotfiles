@@ -40,11 +40,6 @@ alias xterm="x-terminal-emulator"
 alias uxterm="x-terminal-emulator"
 alias lxterm="x-terminal-emulator"
 
-# manage wireguard
-alias wgup='basename -s .conf $(ls /etc/wireguard) | fzf --preview-window=hidden | xargs -ro -d "\n" wg-quick up $*'
-alias wgdn='sudo wg | grep interface | cut -f2 -d " " | fzf --preview-window=hidden | xargs -ro -d "\n" wg-quick down $*'
-alias wgxfr="sudo cp -f *.conf /etc/wireguard/; sudo chmod 640 /etc/wireguard/*.conf"
-
 # usbreset-helper
 alias usbreset="usbreset-helper"
 
