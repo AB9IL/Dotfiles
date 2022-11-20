@@ -349,17 +349,29 @@ let g:currentmode={
 set statusline=   " clear the statusline for when vimrc is reloaded
 set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
 set statusline+=%3n\                                " buffer number
-set statusline+=%h%m%r%w\                           " flags
 set statusline+=%f\                                 " file name
+set statusline+=%h%m%r%w\                           " flags
 set statusline+=%=                                  " right align
 set statusline+=%{&fileformat}\ \|                  " file format
 set statusline+=\ %{strlen(&fenc)?&fenc:&enc}\ \|   " encoding
 set statusline+=\ %{strlen(&ft)?&ft:'none'}\        " filetype
-set statusline+=\ %<%p%%\                             " position
+set statusline+=\ %<%p%%\                           " position
 set statusline+=\ %-4.(%l:%c%)\                     " offset
 
 " status bar colors
-hi StatusLine guifg=black guibg=white ctermfg=black ctermbg=white
+hi StatusLine guifg=Black guibg=Grey ctermfg=Black ctermbg=Grey
+function! InsertStatuslineColor(mode)
+    if a:mode == 'i'
+        hi statusline guibg=Blue guifg=White ctermfg=6  ctermbg=0
+    elseif a:mode == 'r'
+        hi statusline guibg=Purple guifg=Black ctermfg=5  ctermbg=0
+    else
+        hi statusline guifg=Black guibg=Grey ctermfg=Black  ctermbg=Grey
+    endif
+endfunction
+au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au InsertLeave * hi statusline guifg=Black guibg=Grey ctermfg=Black  ctermbg=Grey
+
 " .............................................................................
 " Fast editing and reloading of vimrc configs
 " .............................................................................
