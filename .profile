@@ -26,8 +26,16 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# set the dpi
+my_dpi=140
+# res="1920x1080"
+# primary="$(xrandr | grep -E " connected primary " | cut -d' ' -f1)"
+
 # qt
-export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_XCB_FORCE_SOFTWARE_OPENGL=1
+export QT_QPA_PLATFORMTHEME=gtk2
+export QT_FONT_DPI=$my_dpi
+export QT_SCALE_FACTOR=1.0000
 
 # browsers
 export BROWSER=x-www-browser
@@ -38,17 +46,14 @@ export PISTOL_CHROMA_FORMATTER=terminal256
 
 # golang
 export GOROOT=/usr/local/go
-export GOPATH=~/go
-export GOBIN=~/go/bin
-export PATH=$PATH:$GOBIN:$GOROOT/bin
+export GOPATH=$GOROOT
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOROOT:$GOBIN
 
 # java
-export JAVA_HOME=/usr/lib/jvm/default-java/jre
+export JAVA_HOME=/usr/lib/jvm/default-java
 
 # properly start xserver
 if [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ]; then
-	exec startx
+	exec startx -- -dpi ${my_dpi}
 fi
-
-xset s noblank
-xset s off -dpms
