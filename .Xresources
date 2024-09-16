@@ -1,43 +1,42 @@
 ! xrdb -merge ~/.Xresources (TO APPLY CHANGES)
 
-! Color-scheme : Isotope Dark
-! Author       : Author Chris Kempson
+! Color-scheme : Campbell
 ! special
-*.foreground:   #d0d0d0
-*.background:   #000000
-*.cursorColor:  #d0d0d0
+*.foreground:   #e2ecf1
+*.background:   #0c0c0c
+*.cursorColor:  #e2ecf1
 
 ! black
-*.color0:       #000000
-*.color8:       #808080
+*.color0:       #0c0c0c
+*.color8:       #767676
 
 ! red
-*.color1:       #ff0000
-*.color9:       #ff0000
+*.color1:       #c50f1f
+*.color9:       #e74856
 
 ! green
-*.color2:       #33ff00
-*.color10:      #33ff00
+*.color2:       #13a10e
+*.color10:      #16c60c
 
 ! yellow
-*.color3:       #ff0099
-*.color11:      #ff0099
+*.color3:       #c19c00
+*.color11:      #f9f1a5
 
 ! blue
-*.color4:       #0066ff
-*.color12:      #0066ff
+*.color4:       #3259ce
+*.color12:      #3b78ff
 
 ! magenta
-*.color5:       #cc00ff
-*.color13:      #cc00ff
+*.color5:       #881798
+*.color13:      #b4009e
 
 ! cyan
-*.color6:       #00ffff
-*.color14:      #00ffff
+*.color6:       #3a96dd
+*.color14:      #61d6d6
 
 ! white
-*.color7:       #d0d0d0
-*.color15:      #ffffff
+*.color7:       #cccccc
+*.color15:      #f2f2f2
 
 URxvt*termName:  screen-256color
 URxvt*scrollBar: false
@@ -83,24 +82,36 @@ URxvt*tabbed.tabbar-bg: 0
 URxvt*tabbed.tab-fg: 3
 URxvt*tabbed.tab-bg: 0
 
+
+UXTerm*termName: xterm-color
+UXTerm*scrollBar: false
 UXTerm*faceName: BitstreamVeraSansMono Nerd Font Mono
 UXTerm*faceSize: 10
 UXTerm*vt100*geometry: 120x35+c+c
-UXTerm*vt100.translations: #override \
+UXTerm*vt100*translations: #override \n\
+    Ctrl <Key> minus: smaller-vt-font() \n\
+    Ctrl <Key> plus: larger-vt-font() \n\
+    Ctrl <Key> 0: set-vt-font(d) \n\
 	Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
 	Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
 UXTerm*saveLines: 2000
 
+
+xterm*termName: xterm-color
+xterm*scrollBar: false
 xterm*faceName: BitstreamVeraSansMono Nerd Font Mono
 xterm*faceSize: 10
 xterm*vt100*geometry: 120x35+c+c
-xterm*vt100.translations: #override \
+xterm*vt100*translations: #override \n\
+    Ctrl <Key> minus: smaller-vt-font() \n\
+    Ctrl <Key> plus: larger-vt-font() \n\
+    Ctrl <Key> 0: set-vt-font(d) \n\
 	Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
 	Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
 xterm*saveLines: 2000
 
 ! █▓▒░ default dpi mode
-Xft*dpi       : 96
+Xft.dpi       : 135
 Xft*autohint  : false
 Xft*hintstyle : hintfull
 Xft*lcdfilter : lcddefault
@@ -108,20 +119,10 @@ Xft*antialias : true
 Xft*rgba      : rgb
 
 ! █▓▒░ high dpi mode
-!Xft*dpi: 190
+!Xft.dpi: 190
 !Xft*autohint: 0
 !Xft*lcdfilter: lcddefault
 !Xft*hintstyle: hintfull
 !Xft*hinting: 1
 !Xft*antialias: 1
 !Xft*rgba: rgb
-
-! ------------------------------------------------------------------------------
-! ROFI Color theme glue_pro_blue
-! ------------------------------------------------------------------------------
-rofi.font: Arimo Nerd Font 12
-rofi.color-enabled: true
-rofi.color-window: #393939, #393939, #268bd2
-rofi.color-normal: #393939, #ffffff, #393939, #268bd2, #ffffff
-rofi.color-active: #393939, #268bd2, #393939, #268bd2, #205171
-rofi.color-urgent: #393939, #f3843d, #393939, #268bd2, #ffc39c

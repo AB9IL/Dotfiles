@@ -1,0 +1,86 @@
+super + r
+    run-rofi
+
+super + Return + { ,shift}
+    {x-terminal-emulator -e tmux -2,run-rofi}
+
+# launch terminal
+ctrl + alt + t
+    x-terminal-emulator -e tmux -2
+
+# launch gui or terminal web browser
+super + i + { , shift}
+    {x-www-browser,x-terminal-emulator -e w3m "https://dnsleaktest.com"}
+
+# launch gui or terminal file manager
+super + f + { , shift}
+    {thunar,x-terminal-emulator -e bash -c lf}
+
+# launch bit torrent client
+super + q
+    tixati
+
+# launch streamer or multimedia player
+super + m
+    smplayer
+super + d
+    smplayer
+
+# launch intrernet radio streamer or SDR clients
+super + s + { ,shift,ctrl}
+    {radiostreamer gui,supersdr-wrapper --bookmarks --gui,supersdr-wrapper --servers --gui}
+
+# take a screenshot
+Print + { ,super}
+    gnome-screenshot
+
+# launch rofi calculator
+super + c
+    roficalc
+
+# terminate the session
+super + pause
+    system-exit
+super + shift + e
+    system-exit
+ctrl + alt + Delete
+    system-exit
+
+super + b
+    blueman-manager
+
+super + n
+    networkmanager_dmenu
+
+super + t
+    twitgrid gui
+
+super + v
+    pavucontrol
+
+# Brightness
+XF86MonBrightnessDown
+    brightnessctl set 5%-
+XF86MonBrightnessUp
+    brightnessctl set +5%
+
+# Audio gain or mute
+XF86AudioRaiseVolume
+    pactl set-sink-volume @DEFAULT_SINK@ +5%
+XF86AudioLowerVolume
+    pactl set-sink-volume @DEFAULT_SINK@ -5%
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+XF86AudioMicMute
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Media player controls
+XF86AudioPlay
+    playerctl play
+XF86AudioPause
+    playerctl pause
+XF86AudioNext
+    playerctl next
+XF86AudioPrev
+    playerctl previous
+

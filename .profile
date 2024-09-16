@@ -16,6 +16,11 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
+# include environmental variables
+if [ -f "/etc/environment" ] ; then
+    . /etc/environment
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -27,7 +32,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # set the dpi
-my_dpi=140
+my_dpi=135
 # res="1920x1080"
 # primary="$(xrandr | grep -E " connected primary " | cut -d' ' -f1)"
 
@@ -45,7 +50,7 @@ export BROWSERCLI=w3m
 export PISTOL_CHROMA_FORMATTER=terminal256
 
 # golang
-export GOROOT=/usr/local/go
+export GOROOT=$HOME/.local/go
 export GOPATH=$GOROOT
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOROOT:$GOBIN

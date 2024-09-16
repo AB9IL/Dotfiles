@@ -35,6 +35,8 @@ hi ColorColumn guibg=#303030 cterm=bold ctermbg=Yellow
 let fancy_symbols_enabled=0
 let mapleader="\<Space>"
 let maplocalleader="\<Space>"
+let g:netrw_banner=0
+let g:netrw_winsize=25
 set autoindent
 set autoread
 set backspace=indent,eol,start
@@ -106,9 +108,14 @@ hi SpellCap cterm=underline
 " -----------------------------------------------------------------------------
 " Cursor
 " -----------------------------------------------------------------------------
+let &t_EI = "\<Esc>[2 q"
 let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
-let &t_EI = "\<Esc>[2 q"
+" reset the cursor on start (for older versions of vim, usually not required)
+augroup myCmds
+au!
+autocmd VimEnter * silent !echo -ne "\e[2 q"
+augroup END
 " -----------------------------------------------------------------------------
 " Basic mappings
 " -----------------------------------------------------------------------------
@@ -359,18 +366,18 @@ set statusline+=\ %<%p%%\                           " position
 set statusline+=\ %-4.(%l:%c%)\                     " offset
 
 " status bar colors
-hi StatusLine guifg=Black guibg=Grey ctermfg=Black ctermbg=Grey
+hi StatusLine guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
 function! InsertStatuslineColor(mode)
     if a:mode == 'i'
-        hi statusline guibg=Blue guifg=White ctermfg=6  ctermbg=0
+        hi statusline guifg=Blue guibg=Black ctermfg=Blue ctermbg=Black
     elseif a:mode == 'r'
-        hi statusline guibg=Purple guifg=Black ctermfg=5  ctermbg=0
+        hi statusline guifg=Red guibg=Black ctermfg=Red ctermbg=Black
     else
-        hi statusline guifg=Black guibg=Grey ctermfg=Black  ctermbg=Grey
+        hi statusline guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
     endif
 endfunction
 au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi statusline guifg=Black guibg=Grey ctermfg=Black  ctermbg=Grey
+au InsertLeave * hi statusline guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
 
 " .............................................................................
 " Fast editing and reloading of vimrc configs
