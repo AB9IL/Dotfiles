@@ -53,7 +53,7 @@ return {
   initial_rows = 32,
   font = wezterm.font_with_fallback { 'Bitstream Vera Sans Mono Nerd Font', 'Fira Code Nerd Font', weight = 300 },
   font_size = 11,
-  line_height = 1.05,
+  line_height = 1.1,
   disable_default_key_bindings = true,
   keys = {
     { key = 'T', mods = 'CTRL',         action = wezterm.action{SpawnTab='CurrentPaneDomain'}},
