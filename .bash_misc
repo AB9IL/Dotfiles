@@ -102,6 +102,13 @@ function rgg() {
 [[ -z "$1" ]] || rga --pretty --context 3 "$1"
 }
 
+# generate some passwords
+function mkpw() {
+    for k in {1..5}; do
+    < /dev/urandom tr -cd "[:print:]" | tr -d ' \\/\`\|' | head -c 22; echo
+    done
+}
+
 # enable parallel
 . `which env_parallel.bash`
 
