@@ -27,7 +27,7 @@ hi EndOfBuffer guibg=NONE ctermbg=NONE
 hi CursorLine guibg=#202020 cterm=bold ctermbg=Yellow
 hi CursorColumn guibg=#202020 cterm=bold ctermbg=Yellow
 hi ColorColumn guibg=#303030 cterm=bold ctermbg=Yellow
-
+hi HighlightedyankRegion guifg=#000000 guibg=#9CE342 cterm=bold ctermfg=Black ctermbg=Yellow
 " -----------------------------------------------------------------------------
 " Basic Settings
 " Research any of these by running :help <setting>
@@ -78,7 +78,8 @@ set shiftwidth=2
 set showcmd
 set showmatch
 set shortmess+=c
-set showmode
+"set showmode
+set noshowmode
 set smartcase
 set softtabstop=4
 set spelllang=en_us
@@ -238,7 +239,7 @@ augroup END
 
 " Set filetype syntax and behavior
 au BufNewFile,BufRead *.markdown,*.mdown,*.mkd,*.mdwn,*md set ft=markdown
-au BufNewFile,BufRead conf,config,*.conf,*.strm,*.xspf set ft=config
+au BufNewFile,BufRead conf,config,*.conf,*.strm,*.xspf, *.log set ft=config
 au BufNewFile,BufRead *.wiki set ft=vimwiki
 
 " Prevent rezize glitch on open
@@ -354,6 +355,21 @@ let g:currentmode={
     \}
 
 set statusline=   " clear the statusline for when vimrc is reloaded
+
+" status bar colors
+au VimEnter * hi StatusLine guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
+function! InsertStatuslineColor(mode)
+    if a:mode == 'i'
+        hi statusline guifg=#5080DD guibg=#262626 ctermfg=Blue ctermbg=Black
+    elseif a:mode == 'r'
+        hi statusline guifg=#DD4040 guibg=#262626 ctermfg=Red ctermbg=Black
+    else
+        hi statusline guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
+    endif
+endfunction
+au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au InsertLeave * hi statusline guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
+
 set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
 set statusline+=%3n\                                " buffer number
 set statusline+=%f\                                 " file name
@@ -365,19 +381,7 @@ set statusline+=\ %{strlen(&ft)?&ft:'none'}\        " filetype
 set statusline+=\ %<%p%%\                           " position
 set statusline+=\ %-4.(%l:%c%)\                     " offset
 
-" status bar colors
-hi StatusLine guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
-function! InsertStatuslineColor(mode)
-    if a:mode == 'i'
-        hi statusline guifg=Blue guibg=Black ctermfg=Blue ctermbg=Black
-    elseif a:mode == 'r'
-        hi statusline guifg=Red guibg=Black ctermfg=Red ctermbg=Black
-    else
-        hi statusline guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
-    endif
-endfunction
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi statusline guifg=Grey guibg=Black ctermfg=Grey ctermbg=Black
+
 
 " .............................................................................
 " Fast editing and reloading of vimrc configs

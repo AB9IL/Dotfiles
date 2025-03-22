@@ -20,16 +20,14 @@ xrandr --output ${primary} --scale-from ${res} --panning ${res} --fb ${res} --dp
 [ -f ~/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml ] && \
     sed -i "s|last-window-width\" type=\"int\" value=\".*|last-window-width\" type=\"int\" value=\"${my_width}\"/>|g;
             s|last-window-height\" type=\"int\" value=\".*|last-window-height\" type=\"int\" value=\"${my_height}\"/>|g" ~/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
-
 sudo cp -rf $HOME/.config/rofi /root/.config/
 
-xset r rate 250 45
 xset s noblank
 xset s off
 xset -dpms
 
 # xfce settings daemon
-xfsettingsd &
+[ -z "$(pgrep xfsettingsd)" ] && xfsettingsd &
 
 # fix the slow loading XDG app problem
 dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY

@@ -1,5 +1,5 @@
-super + r
-    run-rofi
+super + r + { ,ctrl }
+    {run-rofi,bash -c "killall picom && picom &"
 
 super + Return + { ,shift}
     {x-terminal-emulator -e tmux -2,run-rofi}
@@ -9,12 +9,12 @@ ctrl + alt + t
     x-terminal-emulator -e tmux -2
 
 # launch gui or terminal web browser
-super + i + { , shift}
+super + i + { ,shift}
     {x-www-browser,x-terminal-emulator -e w3m "https://dnsleaktest.com"}
 
 # launch gui or terminal file manager
-super + f + { , shift}
-    {thunar,x-terminal-emulator -e bash -c lf}
+super + f + { ,shift}
+    {thunar,x-terminal-emulator -e bash -i -c lf}
 
 # launch bit torrent client
 super + q
@@ -27,7 +27,7 @@ super + d
     smplayer
 
 # launch intrernet radio streamer or SDR clients
-super + s + { ,shift,ctrl}
+super + s + { ,shift,ctrl,alt}
     {radiostreamer gui,supersdr-wrapper --bookmarks --gui,supersdr-wrapper --servers --gui}
 
 # take a screenshot
@@ -52,8 +52,11 @@ super + b
 super + n
     networkmanager_dmenu
 
+super + o + { ,shift}
+    {obsidian,x-terminal-emulator -e bash -i -c note-sorter}
+
 super + t
-    twitgrid gui
+    bluetabs gui
 
 super + v
     pavucontrol

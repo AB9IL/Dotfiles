@@ -1,0 +1,12 @@
+[user]
+	email = redcrown01@gmail.com
+	name = Philip Collier
+
+[credential]
+	helper = store --file ~/.git-credentials
+
+[http]
+    postBuffer = 1048576000
+
+[https]
+    postBuffer = 1048576000

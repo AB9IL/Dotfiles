@@ -114,8 +114,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Use a separate file for customized bash aliases
-[ -f ~/.bash_aliases ] && . ~/.bash_aliases
-
-# Use a separate file for miscellaneous bash functions and exports
-[ -f ~/.bash_misc ] && . ~/.bash_misc
+# Use bash customizations saved to ~/.bashrc.d
+for file in ~/.bashrc.d/*; do
+    . "$file"
+    done

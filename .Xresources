@@ -41,11 +41,14 @@
 URxvt*termName:  screen-256color
 URxvt*scrollBar: false
 
+! Rofi columns
+rofi.columns: 2
+
 ! Font
-URxvt*font:		xft:BitstreamVeraSansMono Nerd Font Mono:size=10
-URxvt*boldffont:	xft:BitstreamVeraSansMono Bold Nerd Font Bold:bold:size=10
-URxvt*italicfont:	xft:BitstreamVeraSansMono Nerd Font Oblique:size=10
-URxvt*boldItalicfont:	xft:BitstreamVeraSansMono Nerd Font Bold Oblique:size=10
+URxvt*font:		xft:FiraCode Nerd Font Mono:size=11
+URxvt*boldffont:	xft:FiraCode Bold Nerd Font Bold:bold:size=11
+URxvt*italicfont:	xft:FiraCode Nerd Font Italic:size=11
+URxvt*boldItalicfont:	xft:FiraCode Nerd Font Bold Italic:size=11
 URxvt*urlLauncher: x-www-browser
 URxvt*matcher.button: 1
 URxvt*letterSpace: -1
@@ -85,8 +88,8 @@ URxvt*tabbed.tab-bg: 0
 
 UXTerm*termName: xterm-color
 UXTerm*scrollBar: false
-UXTerm*faceName: BitstreamVeraSansMono Nerd Font Mono
-UXTerm*faceSize: 10
+UXTerm*faceName: FiraCode Nerd Font Mono
+UXTerm*faceSize: 11
 UXTerm*vt100*geometry: 120x35+c+c
 UXTerm*vt100*translations: #override \n\
     Ctrl <Key> minus: smaller-vt-font() \n\
@@ -99,8 +102,8 @@ UXTerm*saveLines: 2000
 
 xterm*termName: xterm-color
 xterm*scrollBar: false
-xterm*faceName: BitstreamVeraSansMono Nerd Font Mono
-xterm*faceSize: 10
+xterm*faceName: FiraCode Nerd Font Mono
+xterm*faceSize: 11
 xterm*vt100*geometry: 120x35+c+c
 xterm*vt100*translations: #override \n\
     Ctrl <Key> minus: smaller-vt-font() \n\
