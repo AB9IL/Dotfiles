@@ -1,0 +1,149 @@
+# NEWSBOAT CONFIGURATION
+
+# refreshing and reloading
+refresh-on-startup  yes
+auto-reload yes
+reload-time 1
+reload-threads 100
+max-items 1000
+
+# web browser
+browser "w3m %u"
+macro m set browser "vlc %u"; open-in-browser ; set browser "w3m %u"
+macro l set browser "x-www-browser %u"; open-in-browser ; set browser "w3m %u"
+
+# unbind keys
+unbind-key h
+unbind-key j
+unbind-key k
+unbind-key l
+unbind-key J
+unbind-key K
+unbind-key LEFT
+unbind-key RIGHT
+unbind-key ESC
+unbind-key SPACE
+
+# bind keys - vim style
+bind-key h prev
+bind-key j down
+bind-key k up
+bind-key l next
+bind-key LEFT prev
+bind-key RIGHT next
+bind-key ESC quit
+bind-key SPACE toggle-show-read-feeds
+
+# colors
+include /usr/share/doc/newsboat/contrib/colorschemes/nord
+
+# highlight positive strings green
+# highlight all "accept([a-zA-Z])+" green default bold
+# highlight all "achiev([a-zA-Z])+" green default bold
+# highlight all "acquir([a-zA-Z])+" green default bold
+# highlight all "agree([a-zA-Z])+" green default bold
+# highlight all "approv([a-zA-Z])+" green default bold
+# highlight all "award([a-zA-Z])+" green default bold
+# highlight all "benefi([a-zA-Z])+" green default bold
+# highlight all "breakout([a-zA-Z])+" green default bold
+# highlight all "breakthrough([a-zA-Z])+" green default bold
+# highlight all "cancer([a-zA-Z])+" green default bold
+# highlight all "complet([a-zA-Z])+" green default bold
+# highlight all "contract([a-zA-Z])+" green default bold
+# highlight all "demonstrat([a-zA-Z])+" green default bold
+# highlight all "drug trial([a-zA-Z])+" green default bold
+# highlight all "endpoint([a-zA-Z])+" green default bold
+# highlight all "end point([a-zA-Z])+" green default bold
+# highlight all "excell([a-zA-Z])+" green default bold
+# highlight all "extremely happy" green default bold
+# highlight all "extremely pleased" green default bold
+# highlight all "fast track([a-zA-Z])+" green default bold
+# highlight all "fda([a-zA-Z])+" green default bold
+# highlight all "fda approv([a-zA-Z])+" green default bold
+# highlight all "gain([a-zA-Z])+" green default bold
+# highlight all "glad" green default bold
+# highlight all "grant([a-zA-Z])+" green default bold
+# highlight all "happy([a-zA-Z])+" green default bold
+# highlight all "improv([a-zA-Z])+" green default bold
+# highlight all "increase([a-zA-Z])+" green default bold
+# highlight all "investor([a-zA-Z])+" green default bold
+# highlight all "landmark([a-zA-Z])+" green default bold
+# highlight all "launch([a-zA-Z])+" green default bold
+# highlight all "leading([a-zA-Z])+" green default bold
+# highlight all "meaningful([a-zA-Z])+" green default bold
+# highlight all "merger([a-zA-Z])+" green default bold
+# highlight all "outperform([a-zA-Z])+" green default bold
+# highlight all "partnership([a-zA-Z])+" green default bold
+# highlight all "phase i([a-zA-Z])+" green default bold
+# highlight all "phase ([1-4])+" green default bold
+# highlight all "pleas([a-zA-Z])+" green default bold
+# highlight all "positive([a-zA-Z])+" green default bold
+# highlight all "primary([a-zA-Z])+" green default bold
+# highlight all "proud([a-zA-Z])+" green default bold
+# highlight all "promis([a-zA-Z])+" green default bold
+# highlight all "quite happy" green default bold
+# highlight all "quite pleased" green default bold
+# highlight all "rais([a-zA-Z])+" green default bold
+# highlight all "receiv([a-zA-Z])+" green default bold
+# highlight all "record earning([a-zA-Z])+" green default bold
+# highlight all "record growth([a-zA-Z])+" green default bold
+# highlight all "sign([a-zA-Z])+" green default bold
+# highlight all "significan([a-zA-Z])+" green default bold
+# highlight all "substan([a-zA-Z])+" green default bold
+# highlight all "success([a-zA-Z])+" green default bold
+# highlight all "upgrad([a-zA-Z])+" green default bold
+# highlight all "very happy" green default bold
+# highlight all "very pleased" green default bold
+
+#highlight neutral but important strings
+# highlight all "announce([a-zA-Z])+" default default bold
+# highlight all "billion([a-zA-Z])+" default default bold
+# highlight all "expand([a-zA-Z])+" default default bold
+# highlight all "first([a-zA-Z])+" default default bold
+# highlight all "first ever([a-zA-Z])+" default default bold
+# highlight all "leads([a-zA-Z])+" green default bold
+# highlight all "million([a-zA-Z])+" default default bold
+# highlight all "trillion([a-zA-Z])+" default default bold
+
+# highlight negative strings red
+# highlight all "bankrupt([a-zA-Z])+" red default bold
+# highlight all "breakdown([a-zA-Z])+" red default bold
+# highlight all "cancel([a-zA-Z])+" red default bold
+# highlight all "cannot" red default bold
+# highlight all "chapter 7" red default bold
+# highlight all "chapter seven" red default bold
+# highlight all "chapter 11" red default bold
+# highlight all "chapter eleven" red default bold
+# highlight all "class action" red default bold
+# highlight all "collaps([a-zA-Z])+" red default bold
+# highlight all "crash([a-zA-Z])+" red default bold
+# highlight all "death([a-zA-Z])+" red default bold
+# highlight all "deteriorat([a-zA-Z])+" red default bold
+# highlight all "delay([a-zA-Z])+" red default bold
+# highlight all "direct offering([a-zA-Z])+" red default bold
+# highlight all "disqualif([a-zA-Z])+" red default bold
+# highlight all "downgrade([a-zA-Z])+" red default bold
+# highlight all "downtrend([a-zA-Z])+" red default bold
+# highlight all "drop([a-zA-Z])+" red default bold
+# highlight all "fail([a-zA-Z])+" red default bold
+# highlight all "hack([a-zA-Z])+" red default bold
+# highlight all "intru([a-zA-Z])+" red default bold
+# highlight all "late([a-zA-Z])+" red default bold
+# highlight all "lag([a-zA-Z])+" red default bold
+# highlight all "lawsuit([a-zA-Z])+" red default bold
+# highlight all "litigat([a-zA-Z])+" red default bold
+# highlight all "lose([a-zA-Z])+" red default bold
+# highlight all "losing" red default bold
+# highlight all "loss([a-zA-Z])+" red default bold
+# highlight all "lost" red default bold
+# highlight all "lower([a-zA-Z])+" red default bold
+# highlight all "miss([a-zA-Z])+" red default bold
+# highlight all "unable" red default bold
+# highlight all "public offering" red default bold
+# highlight all "private placement offering" red default bold
+# highlight all "equity offering" red default bold
+# highlight all "offerin([a-zA-Z])+" red default bold
+# highlight all "regret([a-zA-Z])+" red default bold
+# highlight all "sue([a-zA-Z])+" red default bold
+# highlight all "underperform([a-zA-Z])+" red default bold
+# highlight all "unfortunat([a-zA-Z])+" red default bold

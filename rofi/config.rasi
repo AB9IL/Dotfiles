@@ -1,0 +1,12 @@
+configuration {
+    modes: [window,drun,combi];
+    threads: 2;
+    sorting-method: "fzf";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    font: "Arimo Nerd Font 13";
+    combi-modi: "window,drun";
+    dpi: 135;
+}
+
+@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
