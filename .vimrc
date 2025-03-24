@@ -16,18 +16,6 @@ else
   set t_Co=256
 endif
 
-" Set up the colors.
-set background=dark
-colorscheme torte
-syntax on
-filetype on
-hi clear LineNr
-hi clear SignColumn
-hi EndOfBuffer guibg=NONE ctermbg=NONE
-hi CursorLine guibg=#202020 cterm=bold ctermbg=Yellow
-hi CursorColumn guibg=#202020 cterm=bold ctermbg=Yellow
-hi ColorColumn guibg=#303030 cterm=bold ctermbg=Yellow
-hi HighlightedyankRegion guifg=#000000 guibg=#9CE342 cterm=bold ctermfg=Black ctermbg=Yellow
 " -----------------------------------------------------------------------------
 " Basic Settings
 " Research any of these by running :help <setting>
@@ -101,10 +89,25 @@ set wrap
 
 runtime! macros/matchit.vim
 
-hi SpellBad cterm=underline ctermfg=9
-hi SpellLocal cterm=underline ctermfg=9
-hi SpellRare cterm=underline ctermfg=9
-hi SpellCap cterm=underline
+" Set up the colors.
+set background=dark
+colorscheme torte
+syntax on
+filetype on
+hi clear LineNr
+hi clear SignColumn
+hi! EndOfBuffer guibg=NONE ctermbg=NONE
+hi! Search ctermbg=DarkGrey ctermfg=Black cterm=bold guifg=#CCCCDD guibg=#5775E4
+hi! CurSearch ctermbg=DarkGrey ctermfg=Black cterm=bold guifg=#CCCCDD guibg=#00AAAA
+hi! Visual ctermbg=DarkGrey ctermfg=Black cterm=bold guifg=#CCCCDD guibg=#5775E4
+hi! ColorColumn cterm=bold ctermbg=Yellow guibg=#303030
+hi! CursorLine cterm=bold ctermbg=Yellow guibg=#303030
+hi! CursorColumn cterm=bold ctermbg=Yellow guibg=#303030
+hi HighlightedyankRegion ctermfg=Black ctermbg=Yellow cterm=bold guifg=#000000 guibg=#9CE342
+hi SpellBad cterm=underline ctermfg=9 gui=underline guifg=#CC3030
+hi SpellLocal cterm=underline ctermfg=9 gui=underline guifg=#CC3030
+hi SpellRare cterm=underline ctermfg=9 gui=underline guifg=#CC3030
+hi SpellCap cterm=underline ctermfg=9 gui=underline guifg=#CC3030
 
 " -----------------------------------------------------------------------------
 " Cursor
@@ -331,46 +334,21 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Status Line
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Status Line Custom
-let g:currentmode={
-    \ 'n'  : 'Normal',
-    \ 'no' : 'Normal·Operator Pending',
-    \ 'v'  : 'Visual',
-    \ 'V'  : 'V·Line',
-    \ '^V' : 'V·Block',
-    \ 's'  : 'Select',
-    \ 'S'  : 'S·Line',
-    \ '^S' : 'S·Block',
-    \ 'i'  : 'Insert',
-    \ 'R'  : 'Replace',
-    \ 'Rv' : 'V·Replace',
-    \ 'c'  : 'Command',
-    \ 'cv' : 'Vim Ex',
-    \ 'ce' : 'Ex',
-    \ 'r'  : 'Prompt',
-    \ 'rm' : 'More',
-    \ 'r?' : 'Confirm',
-    \ '!'  : 'Shell',
-    \ 't'  : 'Terminal'
-    \}
-
 set statusline=   " clear the statusline for when vimrc is reloaded
 
 " status bar colors
-au VimEnter * hi StatusLine guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
-function! InsertStatuslineColor(mode)
-    if a:mode == 'i'
-        hi statusline guifg=#5080DD guibg=#262626 ctermfg=Blue ctermbg=Black
-    elseif a:mode == 'r'
-        hi statusline guifg=#DD4040 guibg=#262626 ctermfg=Red ctermbg=Black
-    else
-        hi statusline guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
-    endif
-endfunction
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi statusline guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
+hi NormalColor guifg=#50DD6A guibg=#262626 ctermfg=Grey ctermbg=Black
+hi InsertColor guifg=#5080DD guibg=#262626 ctermfg=Blue ctermbg=Black
+hi ReplaceColor guifg=#DD4040 guibg=#262626 ctermfg=Red ctermbg=Black
+hi VisualColor guifg=#DD40DD guibg=#262626 ctermfg=Magenta ctermbg=Black
+hi CommandColor guifg=#CCCCDD guibg=#262626 ctermfg=Grey ctermbg=Black
 
-set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+set statusline+=%#NormalColor#%{(mode()=='n')?'\ \ NORMAL\ ':''}
+set statusline+=%#InsertColor#%{(mode()=='i')?'\ \ INSERT\ ':''}
+set statusline+=%#ReplaceColor#%{(mode()=='R')?'\ \ REPLACE\ ':''}
+set statusline+=%#VisualColor#%{(mode()=='v')?'\ \ VISUAL\ ':''}
+set statusline+=%#VisualColor#%{(mode()=='')?'\ \ VISUAL\ ':''}
+set statusline+=%#CommandColor#%{(mode()=='c')?'\ \ COMMAND\ ':''}
 set statusline+=%3n\                                " buffer number
 set statusline+=%f\                                 " file name
 set statusline+=%h%m%r%w\                           " flags
@@ -380,8 +358,6 @@ set statusline+=\ %{strlen(&fenc)?&fenc:&enc}\ \|   " encoding
 set statusline+=\ %{strlen(&ft)?&ft:'none'}\        " filetype
 set statusline+=\ %<%p%%\                           " position
 set statusline+=\ %-4.(%l:%c%)\                     " offset
-
-
 
 " .............................................................................
 " Fast editing and reloading of vimrc configs
