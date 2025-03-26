@@ -12,6 +12,7 @@ return {
 		selection_bg = "#c6cae0",
 		background = "#000000",
 		foreground = "#c6cae0",
+        split = "#00afff",
 		ansi = {
 			"#0c0c0c",
 			"#c50f1f",
@@ -62,6 +63,8 @@ return {
 	hide_tab_bar_if_only_one_tab = true,
 	disable_default_key_bindings = true,
 	keys = {
+		{ key = "-", mods = "LEADER", action = wezterm.action({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
+		{ key = "\\", mods = "LEADER", action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
 		{ key = "t", mods = "CTRL", action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }) },
 		{ key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
 		{ key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize },

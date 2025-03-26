@@ -2,11 +2,11 @@ super + r + { ,ctrl }
     {run-rofi,bash -c "killall picom && picom &"
 
 super + Return + { ,shift}
-    {x-terminal-emulator -e tmux -2,run-rofi}
+    {x-terminal-emulator,run-rofi}
 
 # launch terminal
 ctrl + alt + t
-    x-terminal-emulator -e tmux -2
+    x-terminal-emulator
 
 # launch gui or terminal web browser
 super + i + { ,shift}
