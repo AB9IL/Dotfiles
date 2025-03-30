@@ -1,10 +1,10 @@
 ! xrdb -merge ~/.Xresources (TO APPLY CHANGES)
 
-! Color-scheme : Campbell
+! Color-scheme : MaterialOcean
 ! special
-*.foreground:   #e2ecf1
-*.background:   #0c0c0c
-*.cursorColor:  #e2ecf1
+*.foreground:   #c6cae0
+*.background:   #000000
+*.cursorColor:  #c6cae0
 
 ! black
 *.color0:       #0c0c0c
@@ -23,7 +23,7 @@
 *.color11:      #f9f1a5
 
 ! blue
-*.color4:       #3259ce
+*.color4:       #82aaff
 *.color12:      #3b78ff
 
 ! magenta
@@ -35,14 +35,11 @@
 *.color14:      #61d6d6
 
 ! white
-*.color7:       #cccccc
-*.color15:      #f2f2f2
+*.color7:       #ccccd0
+*.color15:      #f0f0ff
 
 URxvt*termName:  screen-256color
 URxvt*scrollBar: false
-
-! Rofi columns
-rofi.columns: 2
 
 ! Font
 URxvt*font:		xft:FiraCode Nerd Font Mono:size=11
