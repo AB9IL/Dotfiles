@@ -53,6 +53,7 @@ return {
     enable_kitty_keyboard = true,
 	use_dead_keys = false,
 	scrollback_lines = 4000,
+    max_fps = 120,
 	-- Default window dimensions (cols and rows)
 	initial_cols = 100,
 	initial_rows = 32,
