@@ -3,7 +3,6 @@
 local wezterm = require("wezterm")
 return {
 	default_prog = default_prog,
-	hide_tab_bar_if_only_one_tab = true,
 	exit_behavior = "Close",
 	term = "xterm-256color",
 	color_scheme = "MaterialOcean",
@@ -33,8 +32,31 @@ return {
 			"#61d6d6",
 			"#f0f0ff",
 		},
+    tab_bar = {
+        active_tab = {
+            bg_color = '#606060', -- Dark grey background for active tab
+            fg_color = '#eeeeff', -- White foreground for active tab
+        },
+        inactive_tab = {
+            bg_color = '#303030', -- Dark grey background for active tab
+            fg_color = '#808080', -- White foreground for active tab
+        },
+        inactive_tab_hover = {
+            bg_color = '#404040',
+            fg_color = '#ddddee',
+        },
+        new_tab = {
+        bg_color = '#202020',
+        fg_color = '#808080',
+        },
+        new_tab_hover = {
+        bg_color = '#202020',
+        fg_color = '#ddddee',
+        },
+    },
 	},
 	window_frame = {
+        active_titlebar_bg = '#202020',
 		font = wezterm.font({ family = "Noto Sans", weight = 400 }),
 	},
 	window_decorations = "NONE",
@@ -69,6 +91,7 @@ return {
 		{ key = "t", mods = "CTRL", action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }) },
 		{ key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
 		{ key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
+		{ key = "=", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
 		{ key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
 		{ key = "N", mods = "CTRL", action = wezterm.action.SpawnWindow },
 		{ key = "P", mods = "CTRL", action = wezterm.action.ActivateCommandPalette },
