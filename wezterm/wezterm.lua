@@ -2,6 +2,8 @@
 --https://gist.github.com/AB9IL/7650164e753d786ef4c7ee066e847ca5
 local wezterm = require("wezterm")
 return {
+    front_end = "WebGpu",
+    webgpu_power_preference = "HighPerformance",
 	default_prog = default_prog,
 	exit_behavior = "Close",
 	term = "xterm-256color",
