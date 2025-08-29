@@ -68,7 +68,7 @@ return {
 		top = 4,
 		bottom = 4,
 	},
-	window_background_opacity = 0.9,
+	window_background_opacity = 0.8,
 	inactive_pane_hsb = {
 		saturation = 0.8,
 		brightness = 0.7,
