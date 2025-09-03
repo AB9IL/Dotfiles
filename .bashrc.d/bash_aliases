@@ -80,6 +80,7 @@ alias sshu='/usr/local/bin/sshuttle-controller'
 
 # data about the distro
 alias readme='w3m "/usr/local/share/html/readme.html"'
+alias homepage='w3m "/usr/local/share/html/homepage.html"'
 alias dwmkeys='w3m "/usr/local/share/html/dwmkeys.html"'
 alias tmuxkeys='w3m "/usr/local/share/html/tmuxkeys.html"'
 alias vimkeys='w3m "/usr/local/share/html/vimkeys.html"'
