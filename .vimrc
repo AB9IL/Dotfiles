@@ -37,7 +37,7 @@ set cursorcolumn
 set cursorline
 set directory=/tmp//,.
 set encoding=utf-8
-set expandtab smarttab
+set expandtab
 set formatoptions=tcqrn1
 set hidden
 set history=500
@@ -62,14 +62,15 @@ set regexpengine=1
 set ruler
 set scrolloff=3
 set shell=/bin/bash
-set shiftwidth=2
+set shiftwidth=4
 set showcmd
 set showmatch
 set shortmess+=c
 "set showmode
 set noshowmode
 set smartcase
-set softtabstop=4
+set smarttab
+set softtabstop=-1
 set spelllang=en_us
 set splitbelow
 set splitright
