@@ -32,7 +32,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # set the dpi
-my_dpi=135
+my_dpi=128
 # res="1920x1080"
 # primary="$(xrandr | grep -E " connected primary " | cut -d' ' -f1)"
 
