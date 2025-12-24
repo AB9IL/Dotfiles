@@ -27,9 +27,10 @@ function wgdn() {
 # check the time sync
 function clockcheck() {
     echo -e "Working...\n"
-    echo -e "Tracking Data:\n$(chronyc tracking)" > /tmp/chronyinfo
-    echo -e "\nActivity:\n$(chronyc activity)" >> /tmp/chronyinfo
-    cat /tmp/chronyinfo
+    clockdata="Tracking Data:\n$(chronyc tracking)"
+    clockdata+="\n\nActivity:\n$(chronyc activity)"
+    clockdata+="\n\nSources:\n$(chronyc sources)"
+    echo -e "$clockdata"
 }
 
 # use Powerline-go prompt
