@@ -16,49 +16,8 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# include environmental variables
-if [ -f "/etc/environment" ] ; then
-    . /etc/environment
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-# set the dpi
-my_dpi=128
-# res="1920x1080"
-# primary="$(xrandr | grep -E " connected primary " | cut -d' ' -f1)"
-
-# qt
-export QT_XCB_FORCE_SOFTWARE_OPENGL=1
-export QT_QPA_PLATFORMTHEME=gtk2
-export QT_FONT_DPI=$my_dpi
-export QT_SCALE_FACTOR=1.0000
-
-# browsers
-export BROWSER=x-www-browser
-export BROWSERCLI=w3m
-
-# image previews for terminal file managers
-export PISTOL_CHROMA_FORMATTER=terminal256
-
-# golang
-export GOROOT=$HOME/.local/go
-export GOPATH=$GOROOT
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOROOT:$GOBIN
-
-# java
-export JAVA_HOME=/usr/lib/jvm/default-java
 
 # properly start xserver
 if [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ]; then
-	exec startx -- -dpi ${my_dpi}
+	exec startx
 fi
