@@ -4,7 +4,7 @@ local wezterm = require("wezterm")
 return {
     front_end = "WebGpu",
     webgpu_power_preference = "HighPerformance",
-	default_prog = default_prog,
+	default_prog = { '/usr/bin/bash', '-l' },
 	exit_behavior = "Close",
 	term = "xterm-256color",
 	color_scheme = "MaterialOcean",
